@@ -1,0 +1,18 @@
+.modal {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  .main {
+    overflow: auto;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+
+    .content {
+      width: 100%;
+      margin-top: 240px;
+      padding: 20px 24px;
+    }
+  }
+}

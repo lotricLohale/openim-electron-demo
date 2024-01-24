@@ -1,0 +1,13 @@
+.modal {
+  :global {
+    .ant-modal-content {
+      overflow: hidden;
+      padding: 0;
+    }
+    // .ant-modal-close {
+    //   color: white;
+    //   top: 10px;
+    //   left: 10px;
+    // }
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.colorTheme": "Atom One Dark",
+  "emmet.includeLanguages": {
+    "wxml": "html"
+  },
+  "prettier.enable": true,
+  "prettier.semi": false,
+  "prettier.singleQuote": true,
+  "prettier.tabWidth": 2,
+  "prettier.useTabs": true,
+  "prettier.jsxSingleQuote": false,
+  "prettier.arrowParens": "avoid",
+  "prettier.trailingComma": "none",
+  "prettier.printWidth": 100,
+  "prettier.endOfLine": "lf",
+  "prettier.proseWrap": "preserve",
+  "prettier.bracketSameLine": false,
+  "prettier.bracketSpacing": true,
+  "prettier.embeddedLanguageFormatting": "auto",
+  "prettier.htmlWhitespaceSensitivity": "ignore",
+  "prettier.ignorePath": ".eslintignore",
+  "prettier.quoteProps": "consistent",
+  "prettier.singleAttributePerLine": false,
+  "eslint.enable": true,
+  "eslint.format.enable": true,
+  "eslint.validate": ["javascript", "typescript", "vue"],
+  "EnglishChineseDictionary.enableHover": true,
+  "merge-conflict.autoNavigateNextConflict.enabled": true,
+  "html.autoClosingTags": true,
+  "html.autoCreateQuotes": true,
+  "json.format.enable": true,
+  "markdown.editor.drop.enabled": true,
+  "php.validate.enable": true,
+  "javascript.autoClosingTags": true,
+  "javascript.format.enable": true,
+  "javascript.validate.enable": true,
+  "editor.formatOnType": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "editor.unicodeHighlight.allowedLocales": {
+    "zh-hans": true,
+    "zh-hant": true
+  },
+  "javascript.preferences.quoteStyle": "single",
+  "volar.inlayHints.eventArgumentInInlineHandlers": false,
+  "background.fullscreen": {
+    "images": [
+      "https://image.v1.vodeshop.com/FigzMZMdhvuKme8BdN_w2q2OAXUo",
+      "https://image.v1.vodeshop.com/Fr8y7lyv5E4v2RCud0opry6BwYBA",
+      "https://image.v1.vodeshop.com/FqcAhm_tapRK3BvWj3CDkRSXU7st",
+      "https://image.v1.vodeshop.com/FpXq7e60kDZVkyWATJb7PxzSsw8B",
+      "https://image.v1.vodeshop.com/Fm9CshH-JHucscgE5eI4q1QFdCQV",
+      "https://image.v1.vodeshop.com/FpFuDTjxWHahX9ihX6FfK1fDxcoM",
+      "https://image.v1.vodeshop.com/Fh9TU24VGAowjG65wtXRcMV60K2m",
+      "https://image.v1.vodeshop.com/FmklzNJfrls-qpdE5cKu_-E_ICtt",
+      "https://image.v1.vodeshop.com/FgpyrLUmwr2MXoEZr4-cVT1pMc_d",
+      "https://image.v1.vodeshop.com/FpSnkXLSm0w7hcsUQ74_-CQS6HLu",
+      "https://image.v1.vodeshop.com/Fn1phPIsvXV6keRlEUJ2-xRblI5O",
+      "https://image.v1.vodeshop.com/FvZLIc7HBGTZzOKmdFVDj0rNud_j"
+    ],
+    "opacity": 0.92,
+    "size": "cover",
+    "position": "center",
+    "interval": 1800
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "files.associations": {
+    "*.nvue": "vue"
+  },
+  "window.zoomLevel": 3
+}

@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "vue.volar",
+    "octref.vetur",
+    "eamodio.gitlens",
+    "vector-of-bool.gitflow",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "akamud.vscode-theme-onedark",
+    "codeinchinese.englishchinesedictionary",
+    "streetsidesoftware.code-spell-checker"
+  ]
+}
