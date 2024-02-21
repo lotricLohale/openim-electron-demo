@@ -1,0 +1,108 @@
+{
+  "name": "OpenIM",
+  "version": "1.1.8",
+  "private": true,
+  "dependencies": {
+    "electron-is-dev": "^2.0.0",
+    "electron-store": "^8.0.1",
+    "qs": "^6.10.3",
+    "electron-updater": "^4.6.5"
+  },
+  "scripts": {
+    "start:renderer": "craco start",
+    "build:renderer": "craco build",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "build:main": "craco build && tsc -p electron && electron-builder --macos",
+    "build:mac": "craco build && tsc -p electron && electron-builder --macos --x64",
+    "build:win": "craco build && tsc -p electron && electron-builder --win --x64",
+    "build:win32": "craco build && tsc -p electron && electron-builder --win --ia32",
+    "build:linux": "craco build && tsc -p electron && electron-builder --linux",
+    "build:linux-arm": "craco build && tsc -p electron && electron-builder --linux --arm64",
+    "test": "craco test",
+    "eject": "react-scripts eject",
+    "el": "electron .",
+    "start:main": "run-p electron:*",
+    "electron:run": "wait-on http://localhost:3001 && tsc -p electron && electron .",
+    "electron:main": "wait-on http://localhost:3001 && tsc -p electron -w",
+    "electron:renderer": "cross-env BROWSER=none npm run start:renderer"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ],
+    "rules": {
+      "no-undef": "off",
+      "no-restricted-globals": "off",
+      "import/no-webpack-loader-syntax": "off",
+      "no-unused-expressions": "off"
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "resolutions": {
+    "//": "See https://github.com/facebook/create-react-app/issues/11773",
+    "react-error-overlay": "6.0.9"
+  },
+  "main": "build/electron/main.js",
+  "homepage": "./",
+  "author": "blooming",
+  "description": "Open IM",
+  "email": "blooming2477@gmail.com",
+  "build": {
+    "extends": null,
+    "files": [
+      "build/**/*"
+    ],
+    "productName": "OpenIM",
+    "win": {
+      "icon": "./build/icons/logo256x256.ico"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "./build/icons/logo512x512.png",
+      "entitlements": "entitlements.mac.plist",
+      "hardenedRuntime": true,
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "请允许本程序访问您的麦克风",
+        "NSCameraUsageDescription": "请允许本程序访问您的摄像头"
+      }
+    },
+    "linux": {
+      "icon": "./build/icons/logo512x512.png",
+      "target": "deb",
+      "maintainer": "openim"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "deleteAppDataOnUninstall": true,
+      "shortcutName": "OpenIM"
+    },
+    "asar": false,
+    "extraResources": {
+      "from": "./electron/exec/",
+      "to": "exec"
+    }
+  },
+  "permissions": [
+    "desktopCapture"
+]
+}

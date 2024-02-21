@@ -1,0 +1,124 @@
+.togetherSend {
+  @colBox();
+  height: 100%;
+  width: 100%;
+  position: relative;
+  background-color: #f6f6f6;
+  .top_title{
+    background-color: #fff;
+    height: 64px;
+    line-height: 64px;
+    font-size: 16px;
+    padding-left: 24px;
+  }
+  // padding: 36px 25px;
+  .null {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    span:nth-child(1) {
+      width: 176px;
+      height: 150px;
+      margin-bottom: 36px;
+      background: url('../assets/images/togather_content_null.png');
+    }
+  }
+  .message {
+    height: 100%;
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 28px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: relative;
+    .message_item {
+      width: 100%;
+      min-height: 138px;
+      background-color: #fff;
+      margin-bottom: 28px;
+      border-radius: 12px;
+      .title {
+        height: 40px;
+        display: flex;
+        align-items: center;
+        margin: 0 22px;
+        border-bottom: 1px solid #EBEBEB;
+        color: #9D9D9D;
+        .text_box {
+          span {
+            color: #428BE5;
+            cursor: pointer;
+          }
+          span:nth-child(2) {
+            margin-left: 10px;
+          }
+        }
+      }
+      .content {
+        min-height: 60px;
+        padding: 10px 22px;
+        color: #333333;
+        word-break: break-all;
+      }
+      .footer {
+        height: 40px;
+        display: flex;
+        align-items: center;
+        padding: 0px 22px;
+        .time {
+          width: 50%;
+          color: #999;
+        }
+        .operation {
+          width: 50%;
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          span {
+            margin-left: 20px;
+          }
+          .delete {
+            display: block;
+            width: 24px;
+            height: 24px;
+            background: url('../assets/images/togather_delete.png');
+            cursor: pointer;
+          }
+          .details {
+            display: block;
+            width: 24px;
+            height: 24px;
+            background: url('../assets/images/togather_details.png');
+            cursor: pointer;
+          }
+          .againSend {
+            display: block;
+            width: 100px;
+            height: 26px;
+            text-align: center;
+            line-height: 26px;
+            background-color: #1B71EC;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+  .createBtn {
+    width: 70px;
+    height: 70px;
+    background: url('../assets/images/createBtn_send.png');
+    background-size: 70px 70px;
+    position: absolute;
+    right: 3%;
+    bottom: 5%;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+}
