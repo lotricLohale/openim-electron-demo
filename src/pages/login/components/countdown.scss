@@ -1,0 +1,9 @@
+.rtc-countdown{
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #A5A8AC;
+    cursor: pointer;
+    &-dis{
+        cursor: default;
+    }
+}

@@ -1,0 +1,319 @@
+.login-main{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    .login-bg{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+    .login-main-box{
+        .login-box-main{
+            width: 100%;
+            height: 100%;
+            .login-box-main-title{
+                margin-top: 72px;
+                text-align: center;
+            }
+            .login-box-main-welcome{
+                margin-top: 16px;
+                text-align: center;
+                color: #0e1013;
+                font-family: "PingFang SC";
+                font-size: 24px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 36px;
+            }
+            .login-box-main-form{
+                margin: auto;
+                margin-top: 32px;
+                width: 428px;
+                height: 458px;
+                flex-shrink: 0;
+                border-radius: 24px;
+                background: #FFF;
+            }
+        }
+    }
+    .login-main-div{
+      width: 500px;
+      height: 800px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-left: -250px;
+      margin-top: -400px;
+    }
+    .login-login{
+      padding-top: 110px;
+      padding-left: 60px;
+      padding-right: 60px;
+      .rtc-diy-form{
+        padding: 0px;
+      }
+      .ant-progress-bg{
+        height: 3px !important;
+      }
+      .login-login-title{
+        color: #000000;
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 500;
+        margin-bottom: 15px;
+      }
+      .login-login-tips{
+        color: #0e1013;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        margin-top: 24px;
+      }
+      .login-login-value{
+        color: #a5a8ac;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        margin-bottom: 42px;
+      }
+    }
+    .login-login-pwd{
+      padding-top: 80px;
+      padding-left: 60px;
+      padding-right: 60px;
+      .pwd-title{
+        color: #000000;
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 500;
+        margin-bottom: 24px;
+        text-align: center;
+      }
+      .pwd-tips{
+        color: #0e1013;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        margin-bottom: 12px;
+        text-align: center;
+      }
+      .pwd-tips-info{
+        color: #a5a8ac;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        margin-bottom: 32px;
+        text-align: center;
+      }
+      .pwd-img{
+        width: 160px;
+        height: 160px;
+        margin: auto;
+        display: block;
+        margin-bottom: 3px;
+      }
+      .google-img{
+        display: block;
+        margin: auto;
+        width: 82px;
+        height: 82px;
+        margin-top: 50px;
+        margin-bottom: 20px;
+      }
+      .google-tips{
+        color: #0e1013;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        margin-bottom: 40px;
+        text-align: center;
+      }
+      .rtc-diy-form{
+        padding: 0px;
+      }
+    }
+}
+#root{
+    width: 100%;
+    height: 100%;
+}
+
+.login-type-switch {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-items: center;
+    height: 56px;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    background-color: #f3f6fa;
+    & > div {
+      width: 50%;
+      text-align: center;
+      color: #a5a8ac;
+      font-family: "PingFang SC";
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 56px;
+      position: relative;
+      cursor: pointer;
+      &::after {
+        display: none;
+        content: " ";
+        width: 26px;
+        height: 1.5px;
+        background-color: #0e1013;
+        position: absolute;
+        left: 50%;
+        margin-left: -13px;
+        bottom: 13px;
+      }
+      &::before {
+        display: none;
+        content: " ";
+        height: 56px;
+        width: 234px;
+        background-image: url("../../assets/images/login/type_active.png");
+        position: absolute;
+        top: 0px;
+        left: 0px;
+      }
+      &:last-child {
+        &::before {
+          transform: rotateY(180deg);
+          left: -20px;
+        }
+      }
+      & > span {
+        position: relative;
+      }
+    }
+    & .type-active {
+      color: #0e1013;
+      font-weight: 500;
+      &::before,
+      &::after {
+        display: inline-block;
+      }
+    }
+  }
+  .rtc-diy-form{
+    padding: 40px 24px;
+    .ant-form{
+      .ant-form-item{
+        .ant-form-item-label{
+          padding-left: 12px;
+          & > label {
+            color: #a5a8ac;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 500;
+          }
+        }
+        .ant-form-item-control-input-content > input.ant-input,
+        .ant-form-item-control-input-content > span.ant-input-password{
+            border-radius: 12px;
+            height: 48px;
+            border: 1.2px solid var(---, #F3F4F5);
+        }
+      }
+      .rtc-check-protocol {
+        color: #a5a8ac;
+        .ant-checkbox-inner {
+          border-radius: 50%;
+          &:hover{
+            border-radius: 50%;
+          }
+        }
+        .ant-checkbox-checked {
+            .ant-checkbox-inner {
+              background-color: #0e1013;
+              border-color: #0e1013;
+            }
+        }
+        .protocol-click{
+          cursor: pointer;
+          color: #0e1013;
+          &:hover{
+            color: #4096ff;
+          }
+        }
+      }
+      .ant-form-item{
+        margin-bottom: 32px;
+        .ant-input-affix-wrapper-lg input,
+        .ant-input-lg {
+          font-size: 14px;
+        }
+      }
+      .ant-form-item-explain-error{
+        padding-left: 11px;
+      }
+    }
+  }
+  .ant-btn.rtc-form-btn{
+    border-radius: 12px;
+    height: 48px;
+    background: var(---1, #0E1013);
+    box-shadow: none;
+    color: #ffffff;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    border: 0px;
+    &:hover{
+      background: var(---1, #0E1013);
+      color: #ffffff;
+      opacity: 0.85;
+    }
+    &:disabled {
+      background: var(---3, #A5A8AC);
+      color: #ffffff;
+      &:hover{
+        background: var(---3, #A5A8AC);
+        color: #ffffff;
+      }
+    }
+    &-default{
+      background: #F5F6F7;
+      color: #0E1013;
+      &:hover{
+        background: #F5F6F7;
+        color: #0E1013;
+      }
+    }
+  }
+  .rtc-diy-form.rtc-register-form{
+    margin-top: 50px;
+    padding: 0px;
+     .ant-form .ant-form-item{
+      margin-bottom: 12px;
+    }
+  }
+  .register-final{
+    margin-top: 40px;
+    .final-img{
+      display: block;
+      margin: auto;
+    }
+    .final-tips{
+      color: #0e1013;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 500;
+      text-align: center;
+    }
+    .final-value{
+      color: #a5a8ac;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      text-align: center;
+      margin-top: 12px;
+      margin-bottom: 340px;
+    }
+  }

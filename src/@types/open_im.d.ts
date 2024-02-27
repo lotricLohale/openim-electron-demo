@@ -1,4 +1,4 @@
-export type Itype = "login" | "loginWithCode" | "register" | "vericode" | "setPwd" | "setInfo" | "success" | "modifycode" | "modify" | "modifySend";
+export type Itype = "checkLogin" | "login" | "loginWithCode" | "register" | "vericode" | "setPwd" | "setInfo" | "success" | "modifycode" | "modify" | "modifySend";
 
 export type WrapFriendApplicationItem = FriendApplicationItem & { flag?: number };
 export type WrapGroupApplicationItem = GroupApplicationItem & { flag?: number };

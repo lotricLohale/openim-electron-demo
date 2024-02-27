@@ -12,10 +12,10 @@ async function createMainWindow() {
   Menu.setApplicationMenu(null);
   const partition = SINGLE_INSTANCE ? undefined : `persist:part${checkPartition()}`;
   mainWindow = new BrowserWindow({
+    minWidth: 500,
+    minHeight: 800,
     width: 1080,
     height: 810,
-    minWidth: 1080,
-    minHeight: 810,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -58,11 +58,11 @@ async function createMainWindow() {
   }
 
   // DevTools
-  if (isDev) {
+  // if (isDev) {
   mainWindow.webContents.openDevTools({
     mode: "detach",
   });
-  }
+  // }
 
   setIpcMain(mainWindow);
   setTray(mainWindow);

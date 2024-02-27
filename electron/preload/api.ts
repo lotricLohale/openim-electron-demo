@@ -122,7 +122,12 @@ const updateDownload = () => {
 const quitAndInstall = () => {
   ipcRenderer.send("QuitAndInstall");
 };
-
+const setLoginMain = () => {
+  ipcRenderer.send("SetLoginMain");
+};
+const setLoginInit = () => {
+  ipcRenderer.send("SetLoginInit");
+};
 const getVersion = () => {
   return ipcRenderer.sendSync("GetAppVersion");
 };
@@ -189,6 +194,8 @@ export const api: API = {
   checkForUpdates,
   updateDownload,
   quitAndInstall,
+  setLoginMain,
+  setLoginInit,
   getVersion,
   copy2Text,
   delFile,

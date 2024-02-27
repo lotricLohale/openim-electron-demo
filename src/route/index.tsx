@@ -255,7 +255,7 @@ const Auth = () => {
     events.on(SHOW_GOLBAL_SEARCH_MODAL, showGolbalSearch);
     window.ononline = wsConnectsuccessHandler;
     window.onoffline = wsConnectingHandler;
-    getNotification()
+    getNotification();
     return () => {
       im.off(CbEvents.ONTOTALUNREADMESSAGECOUNTCHANGED, totalUnreadHander);
       im.off(CbEvents.ONWSCONNECTING, wsConnectingHandler);
@@ -776,7 +776,7 @@ const MyRoute = () => {
           {/* <Route path="workbench" element={<Workbench/>} /> */}
           {/* <Route path="togetherSend" element={<TogetherSend />} /> */}
         </Route>
-        <Route path="/login" element={<Login />} />
+        <Route path="/login/*" element={<Login />} />
       </Routes>
     </RouterWrapper>
   );

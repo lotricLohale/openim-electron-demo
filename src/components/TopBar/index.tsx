@@ -244,6 +244,7 @@ const TopBar = () => {
 
   const miniSizeApp = () => {
     window.electron && window.electron.miniSizeApp();
+    
   };
 
   const maxSizeApp = () => {

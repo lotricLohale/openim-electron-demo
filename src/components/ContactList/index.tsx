@@ -50,7 +50,7 @@ type Cons = {
   initial: string;
 };
 
-const ContactList: FC<ContactListProps> = ({ contactList, hasMore,length, fetchMoreData, clickItem }) => {
+const ContactList: FC<ContactListProps> = ({ contactList, hasMore, length, fetchMoreData, clickItem }) => {
   const [sections, setSections] = useState<Array<string>>([]);
   const [cons, setCons] = useState<Cons[]>([]);
   const { t } = useTranslation();
@@ -68,7 +68,7 @@ const ContactList: FC<ContactListProps> = ({ contactList, hasMore,length, fetchM
     el?.scrollIntoView({ block: "start", behavior: "smooth" });
   };
 
-  const fn = ()=>{}
+  const fn = () => {};
 
   const ListView = () => (
     <>
@@ -89,11 +89,11 @@ const ContactList: FC<ContactListProps> = ({ contactList, hasMore,length, fetchM
   return (
     <div id="scrollableDiv" className={styles.cons_box}>
       <InfiniteScroll
-        dataLength={length??cons.length}
-        next={fetchMoreData??fn}
-        hasMore={hasMore??false}
+        dataLength={length ?? cons.length}
+        next={fetchMoreData ?? fn}
+        hasMore={hasMore ?? false}
         loader={<Loading height="72px" />}
-        endMessage={<Divider plain/>}
+        endMessage={<Divider plain />}
         scrollableTarget="scrollableDiv"
         height="100%"
       >

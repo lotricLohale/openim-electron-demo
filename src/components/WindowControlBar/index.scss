@@ -1,0 +1,68 @@
+.control-bar-langue {
+  display: flex;
+  align-items: center;
+  & > img {
+    margin-right: 8px;
+  }
+  .ant-select-selector {
+    padding: 0px !important;
+    color: #0e1013;
+    font-family: "PingFang SC";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+  }
+  .ant-select-arrow {
+    right: 0px;
+  }
+}
+.window-control-bar{
+  display: flex;
+  z-index: 1;
+  align-items: center;
+  width: 100%;
+  height: 52px;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: absolute;
+  .control-bar-button{
+    display: flex;
+    align-items: center;
+    & > div {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      stroke-width: 0.5px;
+      stroke: #00000033;
+      margin-right: 8px;
+      cursor: pointer;
+    }
+    .bar-button{
+      &-minimizeWindow{
+        background-color: #FEBC2E;
+      }
+      &-maxmizeWindow{
+        background-color: #28C840;
+      }
+      &-closeWindow{
+        background-color: #FF5F57;
+      }
+    }
+    .control-bar-history{
+      width: 50px;
+      height: 20px;
+      margin-left: 17px;
+      .anticon {
+        color: #3E3F41;
+        &:hover {
+          color: #515255;
+        }
+      }
+      .anticon-left{
+        margin-right: 9px;
+      }
+    }
+  }
+}

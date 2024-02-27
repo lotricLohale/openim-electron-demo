@@ -19,6 +19,7 @@ const { Option } = Select;
 export type FormField = {
   areaCode: string;
   phoneNo: string;
+  phone: string;
   password?: string;
   invitationCode?: string;
   verificationCode?: string;
@@ -171,12 +172,7 @@ const LoginForm: FC<IProps> = (props) => {
         ) : null}
         {type === "register" ? (
           <Form.Item name="invitationCode" label={t("InviteCode")}>
-            <Input
-              style={{ width: "100%" }}
-              bordered={false}
-              placeholder={t("InviteCodeTip", { tip: !appConfig.needInvitationCodeRegister ? "(可选)" : "(必填)" })}
-              allowClear
-            />
+            <Input style={{ width: "100%" }} bordered={false} placeholder={t("InviteCodeTip", { tip: !appConfig.needInvitationCodeRegister ? "(可选)" : "(必填)" })} allowClear />
           </Form.Item>
         ) : null}
         {type === "loginWithCode" ? (

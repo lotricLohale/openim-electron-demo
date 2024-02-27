@@ -68,7 +68,14 @@ export const setIpcMain = (mainWindow: BrowserWindow | null) => {
     }
     app.exit();
   });
-
+  ipcMain.on("SetLoginMain", (e, filters: FileFilter[]) => {
+    mainWindow?.setSize(1080, 810);
+    mainWindow?.center();
+  });
+  ipcMain.on("SetLoginInit", (e, filters: FileFilter[]) => {
+    mainWindow?.setSize(500, 800);
+    mainWindow?.center();
+  });
   ipcMain.on("InputContextMenu", (e) => {
     const menu = Menu.buildFromTemplate([
       {

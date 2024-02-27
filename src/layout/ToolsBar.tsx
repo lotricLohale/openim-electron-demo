@@ -43,14 +43,14 @@ const ToolIcon = ({ tool }: { tool: ToolItem }) => {
   const recvGroupApplicationList = useSelector((state: RootState) => state.contacts.recvGroupApplicationList, shallowEqual);
 
   useEffect(() => {
-    events.on(APPLICATION_ACCESS_UPDATE,getUnAccess)
+    events.on(APPLICATION_ACCESS_UPDATE, getUnAccess);
     return () => {
-      events.off(APPLICATION_ACCESS_UPDATE,getUnAccess)
-    }
-  },[])
+      events.off(APPLICATION_ACCESS_UPDATE, getUnAccess);
+    };
+  }, []);
 
   useEffect(() => {
-    setTimeout(()=>getUnAccess(),2000)
+    setTimeout(() => getUnAccess(), 2000);
   }, [recvFriendApplicationList, recvGroupApplicationList]);
 
   useEffect(() => {
@@ -99,7 +99,7 @@ type ToolsBarProps = {
 
 const ToolsBar: FC<ToolsBarProps> = ({ userInfo }) => {
   const [showPop, setShowPop] = useState(false);
-  const selfID = useSelector((state:RootState)=>state.user.selfInfo.userID,shallowEqual);
+  const selfID = useSelector((state: RootState) => state.user.selfInfo.userID, shallowEqual);
   const navigate = useNavigate();
   const popRef = useRef<HTMLDivElement>(null);
   const avaRef = useRef<HTMLDivElement>(null);
@@ -113,7 +113,7 @@ const ToolsBar: FC<ToolsBarProps> = ({ userInfo }) => {
     setShowPop(false);
     switch (idx) {
       case 0:
-        window.userClick(userInfo.userID)
+        window.userClick(userInfo.userID);
         break;
       case 1:
         navigate("/profile", {
@@ -174,8 +174,8 @@ const ToolsBar: FC<ToolsBarProps> = ({ userInfo }) => {
 
   const logout = async () => {
     await im.logout();
-    window.electron?.removeStoreKey("IMUserID")
-    window.electron?.removeStoreKey("IMProfile")
+    window.electron?.removeStoreKey("IMUserID");
+    window.electron?.removeStoreKey("IMProfile");
     localStorage.removeItem(`improfile-${selfID}`);
     navigate("/login");
   };
