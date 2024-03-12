@@ -76,6 +76,9 @@ export const setIpcMain = (mainWindow: BrowserWindow | null) => {
     mainWindow?.setSize(500, 800);
     mainWindow?.center();
   });
+  ipcMain.on("GetHistoryState", () => {
+    mainWindow?.webContents.canGoBack();
+  });
   ipcMain.on("InputContextMenu", (e) => {
     const menu = Menu.buildFromTemplate([
       {

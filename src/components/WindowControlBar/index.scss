@@ -1,6 +1,7 @@
 .control-bar-langue {
   display: flex;
   align-items: center;
+  -webkit-app-region: no-drag;
   & > img {
     margin-right: 8px;
   }
@@ -26,9 +27,11 @@
   justify-content: space-between;
   padding: 0 24px;
   position: absolute;
+  -webkit-app-region: drag;
   .control-bar-button{
     display: flex;
     align-items: center;
+    -webkit-app-region: no-drag;
     & > div {
       width: 12px;
       height: 12px;
@@ -38,6 +41,25 @@
       stroke: #00000033;
       margin-right: 8px;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .bar-btn-img-min {
+        height: 2px;
+        width: 8px;
+      }
+      .bar-btn-img-close,
+      .bar-btn-img-max{
+        width: 8px;
+      }
+      & img {
+        display: none;
+      }
+      &:hover{
+        & img {
+          display: inline-block;
+        }
+      }
     }
     .bar-button{
       &-minimizeWindow{

@@ -3,6 +3,7 @@ import store from "../store";
 import { BusinessUserInfo } from "../store/types/user";
 import { request } from "../utils";
 import { AxiosResponse } from "axios";
+import { myPost } from "../utils/request";
 
 export enum UsedFor {
   Register = 1,
@@ -33,7 +34,7 @@ const getAreaCode = (code: string) => (code.includes("+") ? code : `+${code}`);
 export const sendSms = (phoneNumber: string, areaCode: string, usedFor: UsedFor, invitationCode?: string): Promise<unknown> =>
   request.post("/account/code", JSON.stringify({ phoneNumber, areaCode: getAreaCode(areaCode), usedFor, invitationCode, operationID: Date.now() + "" }));
 
-export const verifyCode = (params: { phoneNumber: string; areaCode: string; verificationCode: string; usedFor: number }) => request.post("/account/verify", JSON.stringify(params));
+export const verifyCode = (params: { phoneNumber: string; areaCode: string; verificationCode: string; usedFor: number }) => myPost("/account/verify", params);
 
 export const register = (data: DemoRegisterType) => {
   return request.post("/account/password", JSON.stringify(data));

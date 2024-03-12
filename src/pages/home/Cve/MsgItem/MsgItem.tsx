@@ -203,7 +203,7 @@ const MsgItem: FC<MsgItemProps> = (props) => {
 
   const contentStyle = useMemo(() => (isNoti ? { width: "90%" } : { maxWidth: "80%" }), []);
 
-  const notificationDetail = useMemo(() => (isNoti ? JSON.parse(msg.notificationElem.detail) : {}), []);
+  const notificationDetail = useMemo(() => (isNoti ? JSON.parse(msg?.notificationElem?.detail || "{}") : {}), []);
 
   const MsgNameAndTime = useMemo(() => {
     const switchName = () => {

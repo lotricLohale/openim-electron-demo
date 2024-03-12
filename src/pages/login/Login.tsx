@@ -1,8 +1,9 @@
 import { Button, Checkbox, Form, Input, Progress, message } from "antd";
-import login_bg from "@/assets/images/login/login_bg.png";
 import login_title from "@/assets/images/login/login_title.png";
 import googleImg from "@/assets/images/login/google.png";
 import twoCheckImg from "@/assets/images/login/twoCheck.png";
+import appImg from "@/assets/images/login/app.png";
+import qrCodeImg from "@/assets/images/login/qrcode.png";
 import successImg from "@/assets/images/login/set_success.png";
 import LoginForm, { FormField, InfoField } from "./components/LoginForm";
 import { FC, useState } from "react";
@@ -37,15 +38,16 @@ import { initEmoji } from "../../utils/im";
 import { useSelector, shallowEqual } from "react-redux";
 import { RootState } from "../../store";
 import WindowControlBar from "../../components/WindowControlBar";
-import { useDidMountEffect } from "../../hooks/common";
+import { useApiLoading, useDidMountEffect } from "../../hooks/common";
 import React from "react";
 import { AntPhone, PhoneData } from "../../components/PhoneInput";
-
-import "./index.scss";
 import Countdown from "./components/countdown";
 import { v4 } from "uuid";
 import FormItemText from "./components/formItemText";
 import { ResponseData } from "../../types/common";
+import LoginBg from "./loginBg";
+
+import "./index.scss";
 
 export type FormType = "init" | "login" | "register" | "qrCode";
 
@@ -71,8 +73,6 @@ const Login = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
-  const [loginType, setLoginType] = useState("phone");
   const [formData, setFormData] = useState({
     no: "",
     code: "",
@@ -301,100 +301,116 @@ const Login = () => {
   const toggle = (mtype: Itype) => {
     setType(mtype);
   };
-
-  const closeModal = () => {
-    setIsModalVisible(false);
-  };
   const LoginForm = () => {
     const [form] = Form.useForm();
-    const [phoneData, setPhoneData] = useState<PhoneData>();
+    const { loading, apiLoading } = useApiLoading();
+    const [loginType, setLoginType] = useState("phone");
     return (
-      <div className="rtc-diy-form">
-        <Form
-          form={form}
-          layout="vertical"
-          autoComplete="off"
-          onFinish={finish}
-          initialValues={{
-            protocol: true,
-          }}
-        >
-          <Form.Item
-            shouldUpdate
-            label={t("login.phone")}
-            name={"phone"}
-            rules={[
-              {
-                validator: (_, value) => {
-                  return `+${phoneData?.country.dialCode} ${phoneData?.country.format}`.length === phoneData?.inputValue.length
-                    ? Promise.resolve()
-                    : Promise.reject(new Error(t("login.phoneError") as string));
-                },
-              },
-            ]}
-          >
-            <div>
-              <AntPhone
-                placeholder={t("login.phonePlaceholder")}
-                onChange={(data) => {
-                  lastType.current = "checkLogin";
-                  dataRef.current["phoneData"] = data;
-                  form.setFieldsValue({ phone: data.phone });
-                  form.validateFields(["phone"]);
-                  setPhoneData(data);
-                }}
-              />
-            </div>
-          </Form.Item>
-          <Form.Item name="protocol" valuePropName="checked">
-            <Checkbox className="rtc-check-protocol">
-              <Trans
-                t={t}
-                i18nKey="login.protocolTips"
-                components={{
-                  service: (
-                    <span
-                      className="protocol-click"
-                      onClick={(e) => {
-                        e.preventDefault();
-                      }}
-                    ></span>
-                  ),
-                  privacy: (
-                    <span
-                      className="protocol-click"
-                      onClick={(e) => {
-                        e.preventDefault();
-                      }}
-                    ></span>
-                  ),
-                }}
-              />
-            </Checkbox>
-          </Form.Item>
-          <Form.Item shouldUpdate className="absolute bottom-0 mb-0 w-full">
-            {() => {
-              return (
-                <Button
-                  size="large"
-                  className="rtc-form-btn"
-                  htmlType="submit"
-                  disabled={!form.isFieldsTouched(["phone"]) || !!form.getFieldsError().filter(({ errors }) => errors.length).length}
-                  block
-                >
-                  {t("login.registerLogin")}
-                </Button>
-              );
+      <>
+        <TypeSwitch onChange={(val) => setLoginType(val)} />
+        <div className="rtc-diy-form" style={{ display: loginType === "phone" ? undefined : "none" }}>
+          <Form
+            form={form}
+            layout="vertical"
+            autoComplete="off"
+            onFinish={(val) => apiLoading(finish)(val)}
+            initialValues={{
+              protocol: true,
             }}
-          </Form.Item>
-        </Form>
-      </div>
+          >
+            <Form.Item
+              shouldUpdate
+              label={t("login.phone")}
+              name={"phone"}
+              // rules={[
+              //   {
+              //     validator: (_, value) => {
+              //       return `+${phoneData?.country.dialCode} ${phoneData?.country.format}`.length === phoneData?.inputValue.length
+              //         ? Promise.resolve()
+              //         : Promise.reject(new Error(t("login.phoneError") as string));
+              //     },
+              //   },
+              // ]}
+            >
+              <div>
+                <AntPhone
+                  placeholder={t("login.phonePlaceholder")}
+                  onChange={(data) => {
+                    lastType.current = "checkLogin";
+                    dataRef.current["phoneData"] = data;
+                    form.setFieldsValue({ phone: data.phone });
+                    form.validateFields(["phone"]);
+                  }}
+                />
+              </div>
+            </Form.Item>
+            <Form.Item
+              name="protocol"
+              valuePropName="checked"
+              rules={[
+                {
+                  validator: (_, value) => {
+                    console.log(_, value);
+                    return value ? Promise.resolve() : Promise.reject(new Error(t("login.protocolCheck") as string));
+                  },
+                },
+              ]}
+            >
+              <Checkbox className="rtc-check-protocol">
+                <Trans
+                  t={t}
+                  i18nKey="login.protocolTips"
+                  components={{
+                    service: (
+                      <span
+                        className="protocol-click"
+                        onClick={(e) => {
+                          e.preventDefault();
+                        }}
+                      ></span>
+                    ),
+                    privacy: (
+                      <span
+                        className="protocol-click"
+                        onClick={(e) => {
+                          e.preventDefault();
+                        }}
+                      ></span>
+                    ),
+                  }}
+                />
+              </Checkbox>
+            </Form.Item>
+            <Form.Item shouldUpdate className="absolute bottom-0 mb-0 w-full">
+              {() => {
+                return (
+                  <Button
+                    size="large"
+                    className="rtc-form-btn"
+                    htmlType="submit"
+                    disabled={!form.isFieldsTouched(["phone"]) || !!form.getFieldsError().filter(({ errors }) => errors.length).length}
+                    loading={loading}
+                    block
+                  >
+                    {t("login.registerLogin")}
+                  </Button>
+                );
+              }}
+            </Form.Item>
+          </Form>
+        </div>
+        <div className="rtc-diy-qrCode" style={{ display: loginType === "qrCode" ? undefined : "none" }}>
+          <p>{t("login.qrCodeLoginTips")}</p>
+          <img src={qrCodeImg} alt="qrCode" />
+        </div>
+      </>
     );
   };
   const InitLogin = () => {
     return (
       <>
-        <img className="login-bg" src={login_bg} alt="login-bg" />
+        <LoginBg />
+        
         <div className="login-main-box login-main-div">
           <div className="login-box-main">
             <div className="login-box-main-title">
@@ -402,9 +418,12 @@ const Login = () => {
             </div>
             <div className="login-box-main-welcome"> {t("login.tips")}</div>
             <div className="login-box-main-form">
-              <TypeSwitch onChange={(val) => setLoginType(val)} />
               <LoginForm />
             </div>
+            <Button size="large" className="login-box-download" block icon={<img style={{ marginRight: "8px" }} src={appImg} alt="QieQie" />}>
+              {t("login.appDownloadTips")}
+            </Button>
+            <p className="login-box-version">OpenIM toc-enterprise-rtc-3.2.1</p>
           </div>
         </div>
       </>
@@ -412,7 +431,9 @@ const Login = () => {
   };
   const Login = () => {
     const [form] = Form.useForm();
+    const { loading, apiLoading } = useApiLoading();
     const codeFinish = async (values: ResponseData) => {
+      console.log("in");
       const { code } = form.getFieldsValue();
       const checkAreaCode = `+${dataRef.current.phoneData.country.dialCode}`;
       const subData = {
@@ -424,7 +445,7 @@ const Login = () => {
         operationID: v4(),
       };
       const checkData: ResponseData = await verifyCode(subData);
-      if (checkData.errCode !== 0) return;
+      if (checkData?.errCode !== 0) return;
       dataRef.current = { ...subData, ...dataRef.current };
       navigate("/login/loginPwd", { replace: true });
     };
@@ -436,7 +457,7 @@ const Login = () => {
         <div className="login-login-tips">{t("register.sendCode")}</div>
         <div className="login-login-value">{dataRef.current.phoneNumber || "-"}</div>
         <div className="rtc-diy-form">
-          <Form form={form} layout="vertical" onFinish={codeFinish} autoComplete="off">
+          <Form form={form} layout="vertical" onFinish={(val) => apiLoading(codeFinish)(val)} autoComplete="off">
             <Form.Item
               name="code"
               required={false}
@@ -462,7 +483,8 @@ const Login = () => {
                     className="rtc-form-btn"
                     htmlType="submit"
                     block
-                    disabled={!form.isFieldsTouched(true) || !!form.getFieldsError().filter(({ errors }) => errors.length).length}
+                    disabled={loading || !form.isFieldsTouched(true) || !!form.getFieldsError().filter(({ errors }) => errors.length).length}
+                    loading={loading}
                   >
                     {t("register.next")}
                   </Button>
@@ -477,6 +499,7 @@ const Login = () => {
   const LoginPwd = () => {
     const [form] = Form.useForm();
     const [loginType, setLoginType] = React.useState(dataRef.current.IsSetGoogleKey ? "google" : "password");
+    const { loading, apiLoading } = useApiLoading();
     const operate = async (type: string, val: any) => {
       switch (type) {
         case "password":
@@ -512,7 +535,15 @@ const Login = () => {
               />
             </div>
             <div className="rtc-diy-form">
-              <Form form={form} layout="vertical" onFinish={(val) => operate("password", val)} autoComplete="off">
+              <Form
+                form={form}
+                layout="vertical"
+                onFinish={(val) => {
+                  console.log(123);
+                  apiLoading(operate)("password", val);
+                }}
+                autoComplete="off"
+              >
                 <Form.Item
                   name="password"
                   required={false}
@@ -533,6 +564,7 @@ const Login = () => {
                         className="rtc-form-btn"
                         htmlType="submit"
                         block
+                        loading={loading}
                         disabled={!form.isFieldsTouched(true) || !!form.getFieldsError().filter(({ errors }) => errors.length).length}
                       >
                         {t("login.login")}
@@ -571,7 +603,7 @@ const Login = () => {
             />
           </div>
           <div className="rtc-diy-form">
-            <Form form={form} layout="vertical" onFinish={finish} autoComplete="off">
+            <Form form={form} layout="vertical" onFinish={(val) => apiLoading(finish)(val)} autoComplete="off">
               <Form.Item
                 name="password"
                 required={false}
@@ -600,7 +632,7 @@ const Login = () => {
           </div>
         </>
       );
-    }, [form, loginType]);
+    }, [loginType, form, apiLoading, loading]);
     return (
       <div className="login-login-pwd login-main-div">
         <div className="pwd-title">{t("login.login")}</div>
@@ -643,12 +675,13 @@ const Login = () => {
     }, [location.pathname]);
     const OneStep = () => {
       const [form] = Form.useForm();
+      const { loading, apiLoading } = useApiLoading();
       return (
         <>
           <div className="login-login-tips">{t("register.sendCode")}</div>
           <div className="login-login-value">{dataRef.current.phoneNumber}</div>
           <div className="rtc-diy-form">
-            <Form form={form} layout="vertical" onFinish={codeFinish} autoComplete="off">
+            <Form form={form} layout="vertical" onFinish={apiLoading(codeFinish)} autoComplete="off">
               <Form.Item
                 name="code"
                 required={false}
@@ -674,7 +707,8 @@ const Login = () => {
                       className="rtc-form-btn"
                       htmlType="submit"
                       block
-                      disabled={!form.isFieldsTouched(true) || !!form.getFieldsError().filter(({ errors }) => errors.length).length}
+                      loading={loading}
+                      disabled={loading || !form.isFieldsTouched(true) || !!form.getFieldsError().filter(({ errors }) => errors.length).length}
                     >
                       {t("register.next")}
                     </Button>
@@ -849,6 +883,7 @@ const Login = () => {
     };
     const SetEmailStep = () => {
       const [form] = Form.useForm();
+      const { loading, apiLoading } = useApiLoading();
       const checkEmailCode = async () => {
         const { code } = form.getFieldsValue();
         const verifyEmailData: ResponseData = await verifyEmailCode({
@@ -869,7 +904,7 @@ const Login = () => {
               form={form}
               layout="vertical"
               onFinish={() => {
-                checkEmailCode();
+                apiLoading(checkEmailCode)();
               }}
               autoComplete="off"
             >
@@ -898,7 +933,8 @@ const Login = () => {
                       className="rtc-form-btn"
                       htmlType="submit"
                       block
-                      disabled={!form.isFieldsTouched(true) || !!form.getFieldsError().filter(({ errors }) => errors.length).length}
+                      loading={loading}
+                      disabled={loading || !form.isFieldsTouched(true) || !!form.getFieldsError().filter(({ errors }) => errors.length).length}
                     >
                       {t("Confirm")}
                     </Button>
@@ -912,6 +948,7 @@ const Login = () => {
     };
     const FinalStep = () => {
       const [form] = Form.useForm();
+      const { loading, apiLoading } = useApiLoading();
       return (
         <div className="register-final">
           <img className="final-img" src={successImg} alt="register" />
@@ -920,9 +957,9 @@ const Login = () => {
             {t("register.emailNewLabel")}
             {dataRef.current.email}
           </div>
-          <Form form={form} onFinish={() => finish("registerHasEmail")} layout="vertical" autoComplete="off" className="rtc-diy-form">
+          <Form form={form} onFinish={() => apiLoading(finish)("registerHasEmail")} layout="vertical" autoComplete="off" className="rtc-diy-form">
             <Form.Item shouldUpdate>
-              <Button size="large" className="rtc-form-btn" htmlType="submit" block>
+              <Button size="large" className="rtc-form-btn" htmlType="submit" loading={loading} disabled={loading} block>
                 {t("finish")}
               </Button>
             </Form.Item>
@@ -949,7 +986,8 @@ const Login = () => {
     );
   };
   React.useEffect(() => {
-    window.electron.setLoginInit();
+    console.log(123, "init");
+    window.electron?.setLoginInit();
     navigate("/login", { replace: true });
   }, []);
   return (

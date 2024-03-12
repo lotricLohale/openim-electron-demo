@@ -122,7 +122,7 @@ const Home = () => {
     manual: true,
     onSuccess: handleMsg,
     onError: (err) => {
-      console.log(err);
+      console.log("GetChatRecordFailed:", err);
 
       message.error(t("GetChatRecordFailed"));
     },

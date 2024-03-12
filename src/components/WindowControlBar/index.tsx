@@ -5,12 +5,12 @@ import langueIcon from "@/assets/images/topSearchBar/langue.png";
 import { Select } from "antd";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./index.scss";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 const LangueSelect = () => {
   const { i18n } = useTranslation();
-  const [langue, setLangue] = React.useState(i18n.language || "zh-CN");
+  const [langue, setLangue] = React.useState(i18n.language || "zh-cn");
   return (
     <div className="control-bar-langue">
       <img src={langueIcon} alt="langue" />
@@ -23,7 +23,7 @@ const LangueSelect = () => {
           i18n.changeLanguage(val);
         }}
         options={[
-          { value: "zh-CN", label: "中文" },
+          { value: "zh-cn", label: "中文" },
           { value: "en", label: "English" },
         ]}
       />
@@ -33,13 +33,21 @@ const LangueSelect = () => {
 
 const WindowControlBar = () => {
   const navigate = useNavigate();
-  console.log(navigate.length);
+  const location = useLocation();
+  console.log(location, history);
+
   return (
     <div className="window-control-bar">
       <div className="control-bar-button">
-        <div className="bar-button-minimizeWindow" onClick={() => window.electron?.miniSizeApp()}></div>
-        <div className="bar-button-maxmizeWindow" onClick={() => window.electron?.maxSizeApp()}></div>
-        <div className="bar-button-closeWindow" onClick={() => window.electron?.closeApp()}></div>
+        <div className="bar-button-minimizeWindow" onClick={() => window.electron?.miniSizeApp()}>
+          <img className="bar-btn-img-min" src={win_min} alt="min" />
+        </div>
+        <div className="bar-button-maxmizeWindow" onClick={() => window.electron?.maxSizeApp()}>
+          <img className="bar-btn-img-max" src={win_max} alt="max" />
+        </div>
+        <div className="bar-button-closeWindow" onClick={() => window.electron?.closeApp()}>
+          <img className="bar-btn-img-close" src={win_close} alt="close" />
+        </div>
         <div className="control-bar-history">
           <LeftOutlined
             onClick={() => {
