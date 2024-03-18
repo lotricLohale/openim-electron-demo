@@ -12,7 +12,7 @@ import download_msg from "@/assets/images/download_msg.png";
 import add_msg from "@/assets/images/add_msg.png";
 import { downloadFileUtil, events, im } from "../../../../../utils";
 import CopyToClipboard from "react-copy-to-clipboard";
-import { FORWARD_AND_MER_MSG, MUTIL_MSG, REPLAY_MSG, REVOKE_MSG, DELETE_MESSAGE } from "../../../../../constants/events";
+import { FORWARD_AND_MER_MSG, MUTIL_MSG, REPLAY_MSG, Edit_MSG, REVOKE_MSG, DELETE_MESSAGE } from "../../../../../constants/events";
 import { useTranslation } from "react-i18next";
 import { GroupRole, MessageItem, MessageType } from "../../../../../utils/open_im_sdk/types";
 import { isFileDownloaded } from "../../../../../utils/im";
@@ -22,7 +22,7 @@ import { RootState } from "../../../../../store";
 const canCpTypes = [MessageType.TEXTMESSAGE, MessageType.ATTEXTMESSAGE, MessageType.QUOTEMESSAGE];
 const canDownloadTypes = [MessageType.PICTUREMESSAGE, MessageType.VIDEOMESSAGE, MessageType.FILEMESSAGE];
 const canAddTypes = [MessageType.PICTUREMESSAGE, MessageType.FACEMESSAGE];
-const canNotReplyTypes = [MessageType.MERGERMESSAGE,MessageType.CUSTOMMESSAGE,MessageType.QUOTEMESSAGE]
+const canNotReplyTypes = [MessageType.MERGERMESSAGE, MessageType.CUSTOMMESSAGE, MessageType.QUOTEMESSAGE];
 
 type MsgMenuProps = {
   visible: boolean;
@@ -52,13 +52,14 @@ const MsgMenu: FC<MsgMenuProps> = ({ visible, msg, isSelf, visibleChange, childr
   const replayMsg = () => {
     events.emit(REPLAY_MSG, msg);
   };
-
+  const EditMsg = () => {
+    events.emit(Edit_MSG, msg);
+  };
   const revMsg = () => {
     im.newRevokeMessage(JSON.stringify(msg))
       .then((res) => events.emit(REVOKE_MSG, msg.clientMsgID))
       .catch((err) => message.error(t("RevokeMessageFailed")));
   };
-
   const delRemoteRecord = () => {
     im.deleteMessageFromLocalAndSvr(JSON.stringify(msg))
       .then((res) => {
@@ -174,6 +175,12 @@ const MsgMenu: FC<MsgMenuProps> = ({ visible, msg, isSelf, visibleChange, childr
       hidden: true,
     },
     {
+      title: t("Edit"),
+      icon: rev_msg,
+      method: EditMsg,
+      hidden: false,
+    },
+    {
       title: t("Delete"),
       icon: del_msg,
       method: delRemoteRecord,
@@ -187,7 +194,7 @@ const MsgMenu: FC<MsgMenuProps> = ({ visible, msg, isSelf, visibleChange, childr
     },
   ];
 
-  const switchMenu = (menu: typeof menus[0]) => {
+  const switchMenu = (menu: (typeof menus)[0]) => {
     if (msg.attachedInfoElem.isPrivateChat) {
       menu.hidden = privateMenus.includes(menu.title) ? false : true;
     } else {
@@ -195,7 +202,7 @@ const MsgMenu: FC<MsgMenuProps> = ({ visible, msg, isSelf, visibleChange, childr
         menu.hidden = true;
       }
 
-      if (menu.title === t("Reply") && canNotReplyTypes.includes(msg.contentType)){
+      if (menu.title === t("Reply") && canNotReplyTypes.includes(msg.contentType)) {
         menu.hidden = true;
       }
 
@@ -214,6 +221,15 @@ const MsgMenu: FC<MsgMenuProps> = ({ visible, msg, isSelf, visibleChange, childr
           if (selfFlag) {
             menu.hidden = false;
           }
+        }
+      }
+      // 编辑
+      if (menu.title === t("Edit")) {
+        console.log(msg);
+        const interval = (new Date().getTime() - msg.sendTime) / 60000;
+        const selfFlag = isSelf && interval < 1440;
+        if (selfFlag) {
+          menu.hidden = false;
         }
       }
 

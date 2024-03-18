@@ -7,6 +7,7 @@ export const DELETE_MESSAGE = "DELETE_MESSAGE";
 export const IS_SET_DRAFT = "IS_SET_DRAFT";
 export const REVOKE_MSG = "REVOKE_MSG";
 export const REPLAY_MSG = "REPLAY_MSG";
+export const Edit_MSG = "Edit_MSG";
 export const FORWARD_AND_MER_MSG = "FORWARD_AND_MER_MSG";
 export const SEND_FORWARD_MSG = "SEND_FORWARD_MSG";
 export const MUTIL_MSG = "MUTIL_MSG";

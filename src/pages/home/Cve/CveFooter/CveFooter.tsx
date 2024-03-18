@@ -2,7 +2,17 @@ import { CloseCircleFilled, CloseOutlined, SearchOutlined, DownOutlined } from "
 import { Button, Dropdown, Empty, Input, Layout, Modal, Menu, message } from "antd";
 import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { base64toFile, contenteditableDivRange, events, im, isSingleCve, move2end, switchUpload } from "../../../../utils";
-import { ADD_DROP_TEXT, AT_STATE_UPDATE, CUR_GROUPMEMBER_CHANGED, FORWARD_AND_MER_MSG, IS_SET_DRAFT, MUTIL_MSG, MUTIL_MSG_CHANGE, REPLAY_MSG } from "../../../../constants/events";
+import {
+  ADD_DROP_TEXT,
+  AT_STATE_UPDATE,
+  CUR_GROUPMEMBER_CHANGED,
+  Edit_MSG,
+  FORWARD_AND_MER_MSG,
+  IS_SET_DRAFT,
+  MUTIL_MSG,
+  MUTIL_MSG_CHANGE,
+  REPLAY_MSG,
+} from "../../../../constants/events";
 import { faceMap } from "../../../../constants/faceType";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import { RootState } from "../../../../store";
@@ -43,6 +53,7 @@ const CveFooter: FC<CveFooterProps> = ({ sendMsg, curCve }) => {
   // const [flag, setFlag] = useState(false);
   // const latestFlag = useLatest(flag);
   const [replyMsg, setReplyMsg] = useState<MessageItem>();
+  const [handlerTitle, setHandlerTitle] = useState("");
   const [mutilSelect, setMutilSelect] = useState(false);
   const [crardSeVis, setCrardSeVis] = useState(false);
   const [atListState, setAtListState] = useState({
@@ -66,7 +77,7 @@ const CveFooter: FC<CveFooterProps> = ({ sendMsg, curCve }) => {
   const [sendMethod, setSendMethod] = useState(localStorage.getItem("IMSendMethod") ?? "enter");
   const latestSendMethod = useLatest(sendMethod);
 
-  const latestCve = useLatest(curCve)
+  const latestCve = useLatest(curCve);
 
   const dispatch = useDispatch();
 
@@ -83,6 +94,7 @@ const CveFooter: FC<CveFooterProps> = ({ sendMsg, curCve }) => {
 
   useEffect(() => {
     events.on(REPLAY_MSG, replyHandler);
+    events.on(Edit_MSG, editHandler);
     events.on(MUTIL_MSG, mutilHandler);
     events.on(AT_STATE_UPDATE, atHandler);
     events.on(IS_SET_DRAFT, setDraft);
@@ -91,6 +103,7 @@ const CveFooter: FC<CveFooterProps> = ({ sendMsg, curCve }) => {
     window.electron && window.electron.addIpcRendererListener("ScreenshotData", screenshotHandler, "screenshotListener");
     return () => {
       events.off(REPLAY_MSG, replyHandler);
+      events.off(Edit_MSG, editHandler);
       events.off(MUTIL_MSG, mutilHandler);
       events.off(AT_STATE_UPDATE, atHandler);
       events.off(IS_SET_DRAFT, setDraft);
@@ -247,7 +260,14 @@ const CveFooter: FC<CveFooterProps> = ({ sendMsg, curCve }) => {
   };
 
   const replyHandler = (msg: MessageItem) => {
+    setHandlerTitle(t("Reply"));
     setReplyMsg(msg);
+  };
+  const editHandler = (msg: MessageItem) => {
+    setHandlerTitle(t("Edit"));
+    setReplyMsg(msg);
+    latestContent.current = msg.content;
+    setMsgContent(msg.content);
   };
 
   const parseImg = (text: string) => {
@@ -347,7 +367,7 @@ const CveFooter: FC<CveFooterProps> = ({ sendMsg, curCve }) => {
         <div className="reply">
           <CloseCircleFilled onClick={() => setReplyMsg(undefined)} />
           <div className="reply_text">
-            {t("Reply")} <span>{replyMsg?.senderNickname}:</span> {parseMsg(replyMsg!)}
+            {handlerTitle} <span>{replyMsg?.senderNickname}:</span> {parseMsg(replyMsg!)}
           </div>
         </div>
       ) : null,
@@ -374,8 +394,8 @@ const CveFooter: FC<CveFooterProps> = ({ sendMsg, curCve }) => {
       case "quote":
         quoteMsg(text);
         break;
-      default:
-        break;
+      case "edit":
+        editMsg(text);
     }
   };
 
@@ -388,9 +408,9 @@ const CveFooter: FC<CveFooterProps> = ({ sendMsg, curCve }) => {
     setMutilSelect(false);
   };
 
-  const faceClick = useCallback(async (face: typeof faceMap[0] | CustomEmojiType, type: FaceType) => {
+  const faceClick = useCallback(async (face: (typeof faceMap)[0] | CustomEmojiType, type: FaceType) => {
     if (type === "emoji") {
-      const faceEl = `<img class="face_el" alt="${(face as typeof faceMap[0]).context}" style="padding-right:2px" width="24px" src="${(face as typeof faceMap[0]).src}">`;
+      const faceEl = `<img class="face_el" alt="${(face as (typeof faceMap)[0]).context}" style="padding-right:2px" width="24px" src="${(face as (typeof faceMap)[0]).src}">`;
       move2end(inputRef.current!.el);
       setMsgContent(latestContent.current + faceEl);
     } else {
@@ -473,7 +493,20 @@ const CveFooter: FC<CveFooterProps> = ({ sendMsg, curCve }) => {
       })
       .catch(() => (sendFlag.current = false));
   };
-
+  const editMsg = async (text: string) => {
+    const options = {
+      text,
+      atUserIDList: latestAtList.current.map((user) => user.id),
+      atUsersInfo: latestAtList.current.map((user) => ({ atUserID: user.id, groupNickname: user.name })),
+      message: "",
+    };
+    im.createTextAtMessage(options)
+      .then(({ data }) => {
+        sendMsg(data, MessageType.ATTEXTMESSAGE);
+        reSet();
+      })
+      .catch(() => (sendFlag.current = false));
+  };
   const typing = () => {
     if (isSingleCve(curCve)) {
       if (!throttleFlag.current) return;
@@ -492,7 +525,7 @@ const CveFooter: FC<CveFooterProps> = ({ sendMsg, curCve }) => {
   const keyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const ctrlEnterRule = e.key === "Enter" && e.ctrlKey;
     const enterRule = e.key === "Enter" && !e.ctrlKey && e.keyCode !== 229;
-    
+
     if (latestSendMethod.current === "ctrlenter" ? enterRule : ctrlEnterRule) {
       e.preventDefault();
       contenteditableDivRange();
@@ -523,10 +556,9 @@ const CveFooter: FC<CveFooterProps> = ({ sendMsg, curCve }) => {
     }
   };
 
-
   const robotWaitCheck = () => {
-    if(!robots.includes(latestCve.current.userID)){
-      return false
+    if (!robots.includes(latestCve.current.userID)) {
+      return false;
     }
     let message: MessageItem | undefined = undefined;
     try {
@@ -547,8 +579,8 @@ const CveFooter: FC<CveFooterProps> = ({ sendMsg, curCve }) => {
   };
 
   const enterSend = () => {
-    if (robotWaitCheck()){
-      message.info('等待回复中...')
+    if (robotWaitCheck()) {
+      message.info("等待回复中...");
       return;
     }
     if (latestContent.current && !sendFlag.current) {
@@ -719,7 +751,10 @@ const CveFooter: FC<CveFooterProps> = ({ sendMsg, curCve }) => {
 //     p.curCve.isNotInGroup === n.curCve.isNotInGroup
 // );
 
-export default memo(CveFooter, (p, n) => p.curCve.conversationID === n.curCve.conversationID && p.curCve.showName === n.curCve.showName && p.curCve.latestMsg === n.curCve.latestMsg);
+export default memo(
+  CveFooter,
+  (p, n) => p.curCve.conversationID === n.curCve.conversationID && p.curCve.showName === n.curCve.showName && p.curCve.latestMsg === n.curCve.latestMsg
+);
 
 const AtList = memo(({ role, clickAtItem }: { role?: GroupRole; clickAtItem: (member: GroupMemberItem) => void }) => {
   const groupMemberList = useSelector((state: RootState) => state.contacts.groupMemberList, shallowEqual);

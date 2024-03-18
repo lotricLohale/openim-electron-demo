@@ -410,7 +410,7 @@ const Login = () => {
     return (
       <>
         <LoginBg />
-        
+
         <div className="login-main-box login-main-div">
           <div className="login-box-main">
             <div className="login-box-main-title">
@@ -514,6 +514,7 @@ const Login = () => {
           };
           localStorage.setItem(`IMaccount`, dataRef.current.phoneNumber.split(pwdAreaCode)[1]);
           const resData: ResponseData = await login(params);
+          console.log(123456);
           imLogin(resData.data.userID, resData.data.imToken);
           localStorage.setItem(`accountProfile-${resData.data.userID}`, resData.data.chatToken);
           break;
@@ -539,7 +540,6 @@ const Login = () => {
                 form={form}
                 layout="vertical"
                 onFinish={(val) => {
-                  console.log(123);
                   apiLoading(operate)("password", val);
                 }}
                 autoComplete="off"
