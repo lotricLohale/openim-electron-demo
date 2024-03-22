@@ -174,12 +174,12 @@ const MsgMenu: FC<MsgMenuProps> = ({ visible, msg, isSelf, visibleChange, childr
       method: revMsg,
       hidden: true,
     },
-    {
-      title: t("Edit"),
-      icon: rev_msg,
-      method: EditMsg,
-      hidden: false,
-    },
+    // {
+    //   title: t("Edit"),
+    //   icon: rev_msg,
+    //   method: EditMsg,
+    //   hidden: false,
+    // },
     {
       title: t("Delete"),
       icon: del_msg,

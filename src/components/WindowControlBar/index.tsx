@@ -1,6 +1,7 @@
 import win_close from "@/assets/images/topSearchBar/win_close.png";
 import win_max from "@/assets/images/topSearchBar/win_max.png";
 import win_min from "@/assets/images/topSearchBar/win_min.png";
+import closeImg from "@/assets/images/topSearchBar/close.png";
 import langueIcon from "@/assets/images/topSearchBar/langue.png";
 import { Select } from "antd";
 import React from "react";
@@ -33,36 +34,48 @@ const LangueSelect = () => {
 
 const WindowControlBar = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  console.log(location, history);
-
+  console.log(window.electron.platform !== 3);
   return (
     <div className="window-control-bar">
-      <div className="control-bar-button">
-        <div className="bar-button-minimizeWindow" onClick={() => window.electron?.miniSizeApp()}>
-          <img className="bar-btn-img-min" src={win_min} alt="min" />
+      {window.electron.platform !== 3 && (
+        <div className="control-bar-button">
+          <div className="bar-button-minimizeWindow" onClick={() => window.electron?.miniSizeApp()}>
+            <img className="bar-btn-img-min" src={win_min} alt="min" />
+          </div>
+          <div className="bar-button-maxmizeWindow" onClick={() => window.electron?.maxSizeApp()}>
+            <img className="bar-btn-img-max" src={win_max} alt="max" />
+          </div>
+          <div className="bar-button-closeWindow" onClick={() => window.electron?.closeApp()}>
+            <img className="bar-btn-img-close" src={win_close} alt="close" />
+          </div>
+          {/* <div className="control-bar-history">
+            <LeftOutlined
+              onClick={() => {
+                navigate(-1);
+              }}
+            />
+            <RightOutlined
+              onClick={() => {
+                navigate(1);
+              }}
+            />
+          </div> */}
         </div>
-        <div className="bar-button-maxmizeWindow" onClick={() => window.electron?.maxSizeApp()}>
-          <img className="bar-btn-img-max" src={win_max} alt="max" />
-        </div>
-        <div className="bar-button-closeWindow" onClick={() => window.electron?.closeApp()}>
-          <img className="bar-btn-img-close" src={win_close} alt="close" />
-        </div>
-        <div className="control-bar-history">
-          <LeftOutlined
-            onClick={() => {
-              navigate(-1);
-            }}
-          />
-          <RightOutlined
-            onClick={() => {
-              navigate(1);
-            }}
-          />
-        </div>
-      </div>
-
+      )}
       <LangueSelect />
+      {window.electron.platform === 3 && (
+        <div className="control-bar-button">
+          <div className="bar-button-minimizeWin" onClick={() => window.electron?.miniSizeApp()}>
+            <span></span>
+          </div>
+          <div className="bar-button-maxmizeWind" onClick={() => window.electron?.maxSizeApp()}>
+            <span></span>
+          </div>
+          <div className="bar-button-closeWind" onClick={() => window.electron?.closeApp()}>
+            <img src={closeImg} alt="close" />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

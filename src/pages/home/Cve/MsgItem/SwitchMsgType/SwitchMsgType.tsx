@@ -37,6 +37,7 @@ import { uuid } from "../../../../../utils/open_im_sdk";
 import MyAvatar from "../../../../../components/MyAvatar";
 import moment from "moment";
 import { secondsToTime } from "../../../components/Modal/data";
+import { NoticeRender, useNoticeCodeWidthTitle } from "../notice";
 
 const imgClickEmit = (el: PictureElem) => {
   events.emit(IMG_PREVIEW_CLICK, el);
@@ -245,6 +246,7 @@ const SwitchMsgType: FC<SwitchMsgTypeProps> = (props) => {
   const { msg, audio, selfID, msgUploadProgress, msgDownloadProgress, isMerge = false } = props;
   const blackList = useSelector((state: RootState) => state.contacts.blackList, shallowEqual);
   const selfName = useSelector((state: RootState) => state.user.selfInfo.nickname, shallowEqual);
+  const noticeCodeWidthTitle = useNoticeCodeWidthTitle();
   const playerRef = useRef<any>(null);
   const { t } = useTranslation();
   const needMargin = true;
@@ -274,7 +276,6 @@ const SwitchMsgType: FC<SwitchMsgTypeProps> = (props) => {
       console.log("player will dispose");
     });
   };
-
   const switchCustomMsg = (cMsg: any) => {
     const isSelfMsg = isSelf(msg.sendID);
     const isBlackUser = blackList.find((black) => black.userID === (isSelfMsg ? msg.recvID : msg.sendID));
@@ -364,6 +365,16 @@ const SwitchMsgType: FC<SwitchMsgTypeProps> = (props) => {
     const timestamp = msg.sendTime;
     switch (msg.contentType) {
       case MessageType.TEXTMESSAGE:
+        // 系统消息处理自定义
+        let noticeDetail;
+        try {
+          noticeDetail = JSON.parse(msg.content);
+        } catch {}
+        const isNotice = noticeDetail?.contentType && noticeCodeWidthTitle[noticeDetail.contentType];
+        if (isNotice) {
+          return <NoticeRender noticeDetail={noticeDetail} timestamp={timestamp} />;
+        }
+        // 原有逻辑
         let mstr = msg.content ?? "";
         mstr = parseEmojiFace(mstr);
         mstr = parseUrl(mstr);
@@ -448,7 +459,7 @@ const SwitchMsgType: FC<SwitchMsgTypeProps> = (props) => {
           const customData = JSON.parse(customEl.data);
           return switchCustomMsg(customData);
         } catch (error) {
-          return <TextMsgRender mstr={"暂不支持的消息类型"} timestamp={timestamp} needMargin={needMargin} />;
+          return <TextMsgRender mstr={"请前往移动端查看"} timestamp={timestamp} needMargin={needMargin} />;
         }
       case MessageType.GROUPINFOUPDATED:
         const noticeEl = JSON.parse(msg.notificationElem.detail);
@@ -470,7 +481,7 @@ export default memo(SwitchMsgType);
 //   </Tooltip>
 // ));
 
-const TimeTip = (props: any) => null;
+export const TimeTip = (props: any) => null;
 
 const TextMsgRender = memo(({ mstr, timestamp, needMargin }: { mstr: string; timestamp: number; needMargin: boolean }) => {
   return (

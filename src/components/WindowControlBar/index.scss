@@ -72,6 +72,43 @@
         background-color: #FF5F57;
       }
     }
+    .bar-button-minimizeWin{
+      width: 20px;
+      height: 20px;
+      &:hover{
+        opacity: 0.8;
+      }
+      & span{
+        display: inline-block;
+        width: 15.83px;
+        height: 1.17px;
+        background-color: var(---1, #0E1013);
+      }
+    }
+    .bar-button-maxmizeWind{
+      width: 20px;
+      height: 20px;
+      &:hover{
+        opacity: 0.8;
+      }
+      & span{
+        display: inline-block;
+        width: 12.5px;
+        height: 12.5px;
+        flex-shrink: 0;
+        border: 1.17px solid var(---1, #0E1013);
+      }
+    }
+    .bar-button-closeWind{
+      width: 20px;
+      height: 20px;
+      &:hover{
+        opacity: 0.8;
+      }
+      & img{
+        display: inline-block;
+      }
+    }
     .control-bar-history{
       width: 50px;
       height: 20px;

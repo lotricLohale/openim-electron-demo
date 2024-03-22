@@ -423,7 +423,6 @@ const Login = () => {
             <Button size="large" className="login-box-download" block icon={<img style={{ marginRight: "8px" }} src={appImg} alt="QieQie" />}>
               {t("login.appDownloadTips")}
             </Button>
-            <p className="login-box-version">OpenIM toc-enterprise-rtc-3.2.1</p>
           </div>
         </div>
       </>

@@ -20,7 +20,7 @@ type CveItemProps = {
   curUid: string;
 };
 
-const CveItem: ForwardRefRenderFunction<HTMLDivElement, CveItemProps> = (props,ref) => {
+const CveItem: ForwardRefRenderFunction<HTMLDivElement, CveItemProps> = (props, ref) => {
   const { cve, onClick, curCid, curUid, delCve } = props;
   const [popVis, setPopVis] = useState(false);
   const groupList = useSelector((state: RootState) => state.contacts.groupList, shallowEqual);
@@ -43,31 +43,32 @@ const CveItem: ForwardRefRenderFunction<HTMLDivElement, CveItemProps> = (props,r
     }
 
     const pmsg: MessageItem = JSON.parse(lmsg);
-    let prefix = ""
+    let prefix = "";
 
-    if(!isRecv(cve?.recvMsgOpt) && cve.unreadCount >0){
-      prefix = `[${cve.unreadCount + t("Piece")}] `
+    if (!isRecv(cve?.recvMsgOpt) && cve.unreadCount > 0) {
+      prefix = `[${cve.unreadCount + t("Piece")}] `;
     }
 
-    if(cve.groupAtType !== GroupAtType.AtNormal){
-      switch(cve.groupAtType){
+    if (cve.groupAtType !== GroupAtType.AtNormal) {
+      switch (cve.groupAtType) {
         case GroupAtType.AtAll:
-          prefix = t("AtAll")
+          prefix = t("AtAll");
           break;
         case GroupAtType.AtMe:
-          prefix = t("AtMe")
+          prefix = t("AtMe");
           break;
         case GroupAtType.AtAllAtMe:
-          prefix = t("AtAllAtMe")
+          prefix = t("AtAllAtMe");
           break;
         case GroupAtType.AtGroupNotice:
-          prefix = t("AtGroupNotice")
+          prefix = t("AtGroupNotice");
           break;
       }
-      prefix = `<span class="cve_msg_prefix">${prefix}</span> `
+      prefix = `<span class="cve_msg_prefix">${prefix}</span> `;
     }
-    if(prefix){
-      return prefix+parseMessageType(pmsg, curUid)
+    console.log("parseLatestMsg", pmsg);
+    if (prefix) {
+      return prefix + parseMessageType(pmsg, curUid);
     }
     return parseMessageType(pmsg, curUid);
   };
@@ -107,15 +108,15 @@ const CveItem: ForwardRefRenderFunction<HTMLDivElement, CveItemProps> = (props,r
     }
   };
 
-  const isInGroup = useMemo(()=>groupList.find(group=>group.groupID===cve.groupID),[cve.groupID,groupList])
+  const isInGroup = useMemo(() => groupList.find((group) => group.groupID === cve.groupID), [cve.groupID, groupList]);
 
   const PopContent = () => (
     <div onClick={() => setPopVis(false)} className="menu_list">
-      {(
+      {
         <div className="item" onClick={updateCvePin}>
           {cve.isPinned ? t("CancelPin") : t("Pin")}
         </div>
-      )}
+      }
       {cve.unreadCount > 0 && cve.groupID && isInGroup && (
         <div className="item" onClick={markAsRead}>
           {t("MarkAsRead")}
@@ -135,7 +136,7 @@ const CveItem: ForwardRefRenderFunction<HTMLDivElement, CveItemProps> = (props,r
   //   ? `[${cve.unreadCount + t("Piece")}] ${parseLatestMsg(cve.latestMsg)}`
   //   : parseLatestMsg(cve.latestMsg);
 
-    const parseLastMessage = useMemo(()=>parseLatestMsg(),[cve.recvMsgOpt,cve.draftText,cve.groupAtType,cve.latestMsg,cve.unreadCount])
+  const parseLastMessage = useMemo(() => parseLatestMsg(), [cve.recvMsgOpt, cve.draftText, cve.groupAtType, cve.latestMsg, cve.unreadCount]);
 
   return (
     <div ref={ref}>
@@ -160,13 +161,13 @@ const CveItem: ForwardRefRenderFunction<HTMLDivElement, CveItemProps> = (props,r
           </div>
         </div>
       </Popover>
-      <div className="space"/>
+      <div className="space" />
     </div>
   );
 };
 
 const diffKey = ["curCid"];
-const deepKey = ["conversationID", "showName", "faceURL", "recvMsgOpt", "unreadCount", "latestMsg", "draftText", "isPinned","groupAtType"];
+const deepKey = ["conversationID", "showName", "faceURL", "recvMsgOpt", "unreadCount", "latestMsg", "draftText", "isPinned", "groupAtType"];
 export default memo(forwardRef(CveItem), (p, n) => {
   const shallowFlag = p.curCid !== p.cve.conversationID && n.curCid !== p.cve.conversationID && p.curUid === n.curUid;
   const deepFlag = diffMemo(p.cve, n.cve, deepKey);

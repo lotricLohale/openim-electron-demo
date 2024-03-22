@@ -28,6 +28,7 @@ import { customType, GroupTypes, sendMessageErrorType } from "../../../../consta
 import List from "rc-virtual-list";
 import noti_icon from "@/assets/images/cve_noti.png";
 import { throttle } from "throttle-debounce";
+import { useNoticeCodeWidthTitle } from "./notice";
 
 type MsgItemProps = {
   msg: MessageItem;
@@ -203,8 +204,11 @@ const MsgItem: FC<MsgItemProps> = (props) => {
 
   const contentStyle = useMemo(() => (isNoti ? { width: "90%" } : { maxWidth: "80%" }), []);
 
-  const notificationDetail = useMemo(() => (isNoti ? JSON.parse(msg?.notificationElem?.detail || "{}") : {}), []);
-
+  const notificationDetail = useMemo(() => {
+    console.log("notificationDetail", msg);
+    return isNoti ? JSON.parse(msg?.content || "{}") : {};
+  }, []);
+  const noticeCodeWidthTitle = useNoticeCodeWidthTitle();
   const MsgNameAndTime = useMemo(() => {
     const switchName = () => {
       if (msg.contentType === MessageType.GROUPINFOUPDATED) {
@@ -218,7 +222,7 @@ const MsgItem: FC<MsgItemProps> = (props) => {
         case SessionType.SuperGroup:
           return msg.senderNickname;
         case SessionType.Notification:
-          return notificationDetail.notificationName;
+          return noticeCodeWidthTitle[notificationDetail.contentType];
         default:
           return "";
       }
@@ -239,7 +243,7 @@ const MsgItem: FC<MsgItemProps> = (props) => {
         <div className="send_time">{getSendTime}</div>
       </div>
     );
-  }, [msg.senderNickname, msg.sessionType]);
+  }, [msg.senderNickname, msg.sessionType, noticeCodeWidthTitle]);
 
   const showFailedTip = () => {
     if (props.msg.errCode === sendMessageErrorType.NotFriend) {

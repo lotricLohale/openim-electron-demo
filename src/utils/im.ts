@@ -8,7 +8,7 @@ import { getSDK } from "./lib";
 import localforage from "localforage";
 import { ConversationItem, FriendApplicationItem, GroupApplicationItem, MessageItem, MessageType, SessionType } from "./open_im_sdk/types";
 import store from "../store";
-import { getAllDataInLocalStorage } from "./db/localStorage";
+import { getNoticeCodeWidthTitle } from "../pages/home/Cve/MsgItem/notice";
 
 // export const im = new OpenIMSDK();
 export const im = getSDK("./openIM.wasm");
@@ -32,8 +32,14 @@ const switchCustomMsg = (cMsg: any, isSelfMsg: boolean) => {
 };
 
 export const parseMessageType = (pmsg: MessageItem, curUid?: string, isNotify = false): string => {
+  const noticeCodeWidthTitle = getNoticeCodeWidthTitle(t);
   const isSelf = (id: string) => id === curUid;
-
+  let noticeDetail;
+  try {
+    noticeDetail = JSON.parse(pmsg.content);
+  } catch {}
+  const isNotice = noticeDetail?.contentType && noticeCodeWidthTitle[noticeDetail.contentType];
+  if (isNotice) return isNotice;
   switch (pmsg.contentType) {
     case MessageType.TEXTMESSAGE:
       return pmsg.content;
