@@ -1,2 +1,1 @@
-export const singleInstanceLock = false;
-export const maxInstanceCount = 5;
+export const SINGLE_INSTANCE = true

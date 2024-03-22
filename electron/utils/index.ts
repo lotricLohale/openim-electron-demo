@@ -1,8 +1,7 @@
-import log from "./log";
-
-export const isLinux = process.platform == "linux";
-export const isWin = process.platform == "win32";
-export const isMac = process.platform == "darwin";
-export const isProd = !process.env.VITE_DEV_SERVER_URL;
-
-export { log };
+export * from './tray'
+export * from './checkUpdate'
+export * from './download'
+export * from './ipcMain'
+export * from './shortcut'
+export * from './createWin'
+export * from './singleInstance'
