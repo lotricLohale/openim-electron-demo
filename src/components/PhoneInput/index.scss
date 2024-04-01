@@ -1,0 +1,30 @@
+.rtc-phone-input{
+    .react-international-phone-country-selector{
+        display: inline-block;
+        width: 70px;
+        height: 48px;
+        vertical-align: middle;
+        button{
+            padding: 12px !important;
+            border: 1.2px solid var(---, #F3F4F5);
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+            border-right: 0px;
+        }
+    }
+    .ant-input-lg{
+        height: 48px;
+        border: 1.2px solid var(---, #F3F4F5);
+        vertical-align: middle;
+        border-top-right-radius: 12px;
+        border-bottom-right-radius: 12px;
+        border-top-left-radius: 0px !important;
+        border-bottom-left-radius: 0px !important;
+        width: calc(100% - 70px);
+        margin-left: -2px;
+        z-index: 1;
+    }
+    .react-international-phone-country-selector-dropdown{
+        margin-top: 15px;
+    }
+}

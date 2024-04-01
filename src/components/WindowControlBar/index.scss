@@ -1,0 +1,127 @@
+.control-bar-langue {
+  display: flex;
+  align-items: center;
+  -webkit-app-region: no-drag;
+  & > img {
+    margin-right: 8px;
+  }
+  .ant-select-selector {
+    padding: 0px !important;
+    color: #0e1013;
+    font-family: "PingFang SC";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+  }
+  .ant-select-arrow {
+    right: 0px;
+  }
+}
+.window-control-bar{
+  display: flex;
+  z-index: 1;
+  align-items: center;
+  width: 100%;
+  height: 52px;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: absolute;
+  -webkit-app-region: drag;
+  .control-bar-button{
+    display: flex;
+    align-items: center;
+    -webkit-app-region: no-drag;
+    & > div {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      stroke-width: 0.5px;
+      stroke: #00000033;
+      margin-right: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .bar-btn-img-min {
+        height: 2px;
+        width: 8px;
+      }
+      .bar-btn-img-close,
+      .bar-btn-img-max{
+        width: 8px;
+      }
+      & img {
+        display: none;
+      }
+      &:hover{
+        & img {
+          display: inline-block;
+        }
+      }
+    }
+    .bar-button{
+      &-minimizeWindow{
+        background-color: #FEBC2E;
+      }
+      &-maxmizeWindow{
+        background-color: #28C840;
+      }
+      &-closeWindow{
+        background-color: #FF5F57;
+      }
+    }
+    .bar-button-minimizeWin{
+      width: 20px;
+      height: 20px;
+      &:hover{
+        opacity: 0.8;
+      }
+      & span{
+        display: inline-block;
+        width: 15.83px;
+        height: 1.17px;
+        background-color: var(---1, #0E1013);
+      }
+    }
+    .bar-button-maxmizeWind{
+      width: 20px;
+      height: 20px;
+      &:hover{
+        opacity: 0.8;
+      }
+      & span{
+        display: inline-block;
+        width: 12.5px;
+        height: 12.5px;
+        flex-shrink: 0;
+        border: 1.17px solid var(---1, #0E1013);
+      }
+    }
+    .bar-button-closeWind{
+      width: 20px;
+      height: 20px;
+      &:hover{
+        opacity: 0.8;
+      }
+      & img{
+        display: inline-block;
+      }
+    }
+    .control-bar-history{
+      width: 50px;
+      height: 20px;
+      margin-left: 17px;
+      .anticon {
+        color: #3E3F41;
+        &:hover {
+          color: #515255;
+        }
+      }
+      .anticon-left{
+        margin-right: 9px;
+      }
+    }
+  }
+}
