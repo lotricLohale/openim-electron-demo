@@ -141,7 +141,7 @@
     "files": [
       "build/**/*"
     ],
-    "productName": "OpenIM",
+    "productName": "QieQie",
     "win": {
       "icon": "./build/icons/logo256x256.ico"
     },
@@ -161,7 +161,7 @@
     "linux": {
       "icon": "./build/icons/logo512x512.png",
       "target": "deb",
-      "maintainer": "openim"
+      "maintainer": "QieQie"
     },
     "nsis": {
       "oneClick": false,
@@ -173,7 +173,7 @@
       "installerHeaderIcon": "./build/icons/logo16x16.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "OpenIM"
+      "shortcutName": "QieQie"
     },
     "asar": false,
     "extraResources": {
