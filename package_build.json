@@ -1,5 +1,5 @@
 {
-  "name": "OpenIM",
+  "name": "QieQie",
   "version": "1.1.8",
   "private": true,
   "dependencies": {
@@ -64,7 +64,7 @@
     "files": [
       "build/**/*"
     ],
-    "productName": "OpenIM",
+    "productName": "QieQie",
     "win": {
       "icon": "./build/icons/logo256x256.ico"
     },
@@ -84,7 +84,7 @@
     "linux": {
       "icon": "./build/icons/logo512x512.png",
       "target": "deb",
-      "maintainer": "openim"
+      "maintainer": "QieQie"
     },
     "nsis": {
       "oneClick": false,
@@ -94,7 +94,7 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "deleteAppDataOnUninstall": true,
-      "shortcutName": "OpenIM"
+      "shortcutName": "QieQie"
     },
     "asar": false,
     "extraResources": {
@@ -104,5 +104,5 @@
   },
   "permissions": [
     "desktopCapture"
-]
+  ]
 }

@@ -193,7 +193,7 @@ const Profile = () => {
       idx: 2,
     },
     {
-      title: `OpenIM${t("PrivacyAgreement")}`,
+      title: `QieQie${t("PrivacyAgreement")}`,
       idx: 3,
     },
     {

@@ -31,7 +31,7 @@ function checkPreferences() {
   });
 }
 
-app.setAppUserModelId("OpenIM");
+app.setAppUserModelId("QieQie");
 
 app.on("ready", () => {
   initApp();

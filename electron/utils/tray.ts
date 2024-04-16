@@ -6,7 +6,7 @@ import * as isDev from "electron-is-dev";
 let appTray: Tray;
 let timer: NodeJS.Timeout | null = null;
 const emptyPic = path.join(__dirname, isDev ? "../../../public/icons/empty_tray.png" : "../../icons/empty_tray.png");
-const trayPic = path.join(__dirname, isDev ? "../../../public/icons/tray.png" :  process.platform !== "win32" ? "../../icons/tray.png" : "../../icons/logo256x256.ico"); 
+const trayPic = path.join(__dirname, isDev ? "../../../public/icons/tray.png" : process.platform !== "win32" ? "../../icons/tray.png" : "../../icons/logo256x256.ico");
 
 export const setTray = (mainWindow: BrowserWindow | null) => {
   const showMainWindow = () => {
@@ -36,7 +36,7 @@ export const setTray = (mainWindow: BrowserWindow | null) => {
     },
   ]);
   appTray = new Tray(trayPic);
-  appTray.setToolTip("OpenIM");
+  appTray.setToolTip("QieQie");
 
   appTray.setContextMenu(trayMenu);
 

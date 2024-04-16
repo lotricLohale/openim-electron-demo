@@ -55,13 +55,13 @@ const Contacts = () => {
       idx: 4,
       suffix: "mg",
     },
-    {
-      title: t("Label"),
-      icon: label_icon,
-      bgc: "#428BE5",
-      idx: 5,
-      suffix: "lb",
-    },
+    // {
+    //   title: t("Label"),
+    //   icon: label_icon,
+    //   bgc: "#428BE5",
+    //   idx: 5,
+    //   suffix: "lb",
+    // },
   ];
   const [menu, setMenu] = useState(consMenuList[3]);
 

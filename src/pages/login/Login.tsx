@@ -59,13 +59,13 @@ const TypeSwitch: FC<{ onChange?: (val: string) => void }> = (props) => {
     props.onChange?.(loginType);
   }, [loginType]);
   return (
-    <div className={`login-type-switch`}>
-      <div className={`${loginType === "phone" ? "type-active" : ""}`} onClick={() => setLoginType("phone")}>
+    <div className={`login-type-switch`} style={{ backgroundColor: "#fff" }}>
+      {/* <div className={`${loginType === "phone" ? "type-active" : ""}`} onClick={() => setLoginType("phone")}>
         <span>{t("login.phoneLogin")}</span>
       </div>
       <div className={`${loginType === "qrCode" ? "type-active" : ""}`} onClick={() => setLoginType("qrCode")}>
         <span>{t("login.qrCodeLogin")}</span>
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -366,6 +366,7 @@ const Login = () => {
                       <span
                         className="protocol-click"
                         onClick={(e) => {
+                          window.electron.openExternal("https://www.qieqieapp.com/tos-cn.html");
                           e.preventDefault();
                         }}
                       ></span>
@@ -374,6 +375,7 @@ const Login = () => {
                       <span
                         className="protocol-click"
                         onClick={(e) => {
+                          window.electron.openExternal("https://www.qieqieapp.com/privacy-cn.html");
                           e.preventDefault();
                         }}
                       ></span>
@@ -421,7 +423,15 @@ const Login = () => {
             <div className="login-box-main-form">
               <LoginForm />
             </div>
-            <Button size="large" className="login-box-download" block icon={<img style={{ marginRight: "8px" }} src={appImg} alt="QieQie" />}>
+            <Button
+              size="large"
+              className="login-box-download"
+              block
+              onClick={() => {
+                window.electron.openExternal("https://qieqieapp.com");
+              }}
+              icon={<img style={{ marginRight: "8px" }} src={appImg} alt="QieQie" />}
+            >
               {t("login.appDownloadTips")}
             </Button>
           </div>

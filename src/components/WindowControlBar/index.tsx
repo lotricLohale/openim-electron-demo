@@ -48,7 +48,7 @@ const WindowControlBar = () => {
           <div className="bar-button-closeWindow" onClick={() => window.electron?.closeApp()}>
             <img className="bar-btn-img-close" src={win_close} alt="close" />
           </div>
-          {/* <div className="control-bar-history">
+          <div className="control-bar-history">
             <LeftOutlined
               onClick={() => {
                 navigate(-1);
@@ -59,12 +59,24 @@ const WindowControlBar = () => {
                 navigate(1);
               }}
             />
-          </div> */}
+          </div>
         </div>
       )}
       <LangueSelect />
       {window.electron.platform === 3 && (
         <div className="control-bar-button">
+          <div className="control-bar-history">
+            <LeftOutlined
+              onClick={() => {
+                navigate(-1);
+              }}
+            />
+            <RightOutlined
+              onClick={() => {
+                navigate(1);
+              }}
+            />
+          </div>
           <div className="bar-button-minimizeWin" onClick={() => window.electron?.miniSizeApp()}>
             <span></span>
           </div>
