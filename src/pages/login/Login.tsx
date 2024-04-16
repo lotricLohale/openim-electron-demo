@@ -17,6 +17,7 @@ import { im, switchLoginError } from "../../utils";
 import { getIMApiUrl, getIMWsUrl } from "../../config";
 import { useDispatch } from "react-redux";
 import { getAppGlobalConfig, getSelfInfo, resetUserStore } from "../../store/actions/user";
+import { shell } from "electron";
 import { getCveList, resetCveStore } from "../../store/actions/cve";
 import {
   getBlackList,
@@ -985,7 +986,6 @@ const Login = () => {
     );
   };
   React.useEffect(() => {
-    console.log(123, "init");
     window.electron?.setLoginInit();
     navigate("/login", { replace: true });
   }, []);
