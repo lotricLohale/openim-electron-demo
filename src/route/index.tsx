@@ -157,6 +157,7 @@ const Auth = () => {
       const isFriend = JSON.parse(data)[0]?.friendInfo;
       const cardData: any = isFriend ? { friend: isFriend } : { public: JSON.parse(data)[0]?.publicInfo };
       cardData.groupMemberItem = { ...member, allowFriend };
+      console.log("cardData", cardData);
       const cardType = isFriend ? CardType.FriendInfo : CardType.UserInfo;
       events.emit(OPEN_SINGLE_MODAL, cardData, cardType);
     };

@@ -646,7 +646,7 @@ const InnerItem = memo(({ render }: { render: any }) => {
 
   return (
     <div className="wrap">
-      <MyAvatar src={switchSrc(render)} size={38} />
+      <MyAvatar nickname={render.showName ?? render.name ?? render.nickname} src={switchSrc(render)} size={38} />
       <div className="dep_item_info">
         <span className="label">{render.showName ?? render.name ?? render.nickname}</span>
       </div>

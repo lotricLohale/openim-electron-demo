@@ -560,7 +560,7 @@ const ResultList: FC<ResultListProps> = memo((props) => {
               onDoubleClick={() => resultItemDoubleClick && resultItemDoubleClick(item)}
               className={`result_item ${selected && selected === item.conversationID ? "result_item_active" : ""}`}
             >
-              <MyAvatar src={item[urlKey]} size={36} />
+              <MyAvatar nickname={item.nickname} src={item[urlKey]} size={36} />
               <div data-time={item[timeKey] ?? ""} className="item_info">
                 <div className="title">
                   <span>{item[nameKey]}</span>
@@ -762,7 +762,7 @@ const LogsResult: ForwardRefRenderFunction<LogsResultHandler, any> = (props, ref
                   onDoubleClick={() => rightItemDoubleClick(item)}
                   className="result_item"
                 >
-                  <MyAvatar src={item.senderFaceUrl} size={36} />
+                  <MyAvatar nickname={item.senderNickname} src={item.senderFaceUrl} size={36} />
                   <div className="item_info">
                     <div className="title">{item.senderNickname}</div>
                     <div className={`sub_info ${item.contentType === MessageType.CARDMESSAGE ? "sub_card" : ""}`}>{switchContent(item)}</div>

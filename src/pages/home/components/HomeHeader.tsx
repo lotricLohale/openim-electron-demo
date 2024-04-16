@@ -289,7 +289,7 @@ const ChatHeader: FC<ChatHeaderProps> = ({ curCve, typing }) => {
   ) : (
     <div className="chat_header_box">
       <div className="chat_header_box_left">
-        <MyAvatar size={42} src={curCve?.faceURL === "" && GroupTypes.includes(curCve.conversationType) ? group_icon : curCve?.faceURL} />
+        <MyAvatar nickname={curCve?.showName} size={42} src={curCve?.faceURL === "" && GroupTypes.includes(curCve.conversationType) ? group_icon : curCve?.faceURL} />
         <div className="cur_status">
           <Typography.Text ellipsis>{curCve?.showName}</Typography.Text>
           {!isRobot && (

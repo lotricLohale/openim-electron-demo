@@ -32,7 +32,7 @@ const ConSection: FC<ConSectionProps> = ({ section, items, clickItem }) => (
 
 const SectionItemComp: FC<SectionItemProps> = ({ item, clickItem }) => (
   <div onDoubleClick={() => clickItem(item, SessionType.Single)} className={styles.cons_section_item}>
-    <MyAvatar shape="square" size={36} src={item.faceURL} icon={<UserOutlined />} />
+    <MyAvatar shape="square" size={36} nickname={item.nickname} src={item.faceURL} icon={<UserOutlined />} />
     <div className={styles.cons_item_desc}>{item.remark === "" || item.remark === undefined ? item.nickname : item.remark}</div>
   </div>
 );

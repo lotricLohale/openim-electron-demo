@@ -183,11 +183,11 @@ const UserCard: FC<UserCardProps> = ({ draggableCardVisible, info, close, type }
 
   const delComfirm = () => {
     Modal.confirm({
-      title:"提示",
-      content:"确定要解除与对方的好友关系吗？",
-      onOk:delContact
-    })
-  }
+      title: "提示",
+      content: "确定要解除与对方的好友关系吗？",
+      onOk: delContact,
+    });
+  };
 
   const InfoTitle = () => (
     <>
@@ -199,7 +199,7 @@ const UserCard: FC<UserCardProps> = ({ draggableCardVisible, info, close, type }
         </div>
       </div>
       <Upload accept="image/*" openFileDialogOnClick={type ? true : false} action="" customRequest={(data) => uploadIcon(data)} showUploadList={false}>
-        <MyAvatar src={info.faceURL} size={42} />
+        <MyAvatar nickname={info.nickname} src={info.faceURL} size={42} />
       </Upload>
     </>
   );
@@ -228,7 +228,7 @@ const UserCard: FC<UserCardProps> = ({ draggableCardVisible, info, close, type }
               },
               onCancel: () => (drft = ""),
             }}
-            copyable={{text:selfInfo.nickname, onCopy: () => copy2Text(selfInfo.nickname!)}}
+            copyable={{ text: selfInfo.nickname, onCopy: () => copy2Text(selfInfo.nickname!) }}
           >
             {info.nickname}
           </Typography.Text>
@@ -246,11 +246,11 @@ const UserCard: FC<UserCardProps> = ({ draggableCardVisible, info, close, type }
           </Paragraph>
         </Descriptions.Item>
         <Descriptions.Item label="ID">
-        <Typography.Text copyable={{text:selfInfo.userID, onCopy: () => copy2Text(selfInfo.userID)}}>{info.userID!}</Typography.Text>
+          <Typography.Text copyable={{ text: selfInfo.userID, onCopy: () => copy2Text(selfInfo.userID) }}>{info.userID!}</Typography.Text>
         </Descriptions.Item>
         <Descriptions.Item label={t("PhoneNumber")}>
           <Typography.Text
-            copyable={{text:selfInfo.phoneNumber, onCopy: () => copy2Text(selfInfo.phoneNumber??"")}}
+            copyable={{ text: selfInfo.phoneNumber, onCopy: () => copy2Text(selfInfo.phoneNumber ?? "") }}
             editable={{
               maxLength: 11,
               onChange: (v) => (drft = v),
@@ -273,11 +273,11 @@ const UserCard: FC<UserCardProps> = ({ draggableCardVisible, info, close, type }
     <>
       <Descriptions column={1} title={t("UserInfo")}>
         <Descriptions.Item label={t("Nickname")}>
-        <Typography.Text copyable={{text:info.nickname, onCopy: () => copy2Text(info.nickname)}}>{info.nickname}</Typography.Text>
+          <Typography.Text copyable={{ text: info.nickname, onCopy: () => copy2Text(info.nickname) }}>{info.nickname}</Typography.Text>
         </Descriptions.Item>
         {isFriend && (
           <Descriptions.Item label={t("Note")}>
-            <Typography.Text copyable={{text:(info as FriendItem).remark??"", onCopy: () => copy2Text((info as FriendItem).remark)}} editable={infoEditConfig}>
+            <Typography.Text copyable={{ text: (info as FriendItem).remark ?? "", onCopy: () => copy2Text((info as FriendItem).remark) }} editable={infoEditConfig}>
               {(info as FriendItem).remark}
             </Typography.Text>
           </Descriptions.Item>
@@ -285,7 +285,7 @@ const UserCard: FC<UserCardProps> = ({ draggableCardVisible, info, close, type }
         <Descriptions.Item label={t("Sex")}>{info.gender === 1 ? t("Man") : t("Woman")}</Descriptions.Item>
         {/* <Descriptions.Item label={t("Brithday")}>{info.}</Descriptions.Item> */}
         <Descriptions.Item label="ID">
-        <Typography.Text copyable={{text:info.userID, onCopy: () => copy2Text(info.userID)}}>{info.userID!}</Typography.Text>
+          <Typography.Text copyable={{ text: info.userID, onCopy: () => copy2Text(info.userID) }}>{info.userID!}</Typography.Text>
         </Descriptions.Item>
         {/* <Descriptions.Item label="手机号">{info.mobile}</Descriptions.Item> */}
       </Descriptions>
@@ -307,7 +307,7 @@ const UserCard: FC<UserCardProps> = ({ draggableCardVisible, info, close, type }
       <div className="send_card_info">
         <div className="send_card_info_row1">
           <div>{info.nickname}</div>
-          <MyAvatar src={info.faceURL} size={42} />
+          <MyAvatar nickname={info.nickname} src={info.faceURL} size={42} />
         </div>
         <Form form={form} name="basic" onFinish={sendApplication} autoComplete="off">
           <Form.Item name="reqMsg">

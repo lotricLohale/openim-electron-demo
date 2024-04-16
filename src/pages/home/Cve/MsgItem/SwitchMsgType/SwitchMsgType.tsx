@@ -87,9 +87,9 @@ const parseBr = (mstr: string) => {
 };
 
 const parseUrl = (mstr: string) => {
-  const pattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/g;
+  const pattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gi;
   const arr = mstr.match(pattern);
-  arr?.map((a) => {
+  arr?.forEach((a) => {
     mstr = mstr.replaceAll(a, `<a onclick="urlClick('${a}')" href="javascript:;">${a}</a>`);
   });
   return mstr;

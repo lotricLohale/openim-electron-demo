@@ -188,6 +188,7 @@ const MsgItem: FC<MsgItemProps> = (props) => {
     if (msg.contentType === MessageType.GROUPINFOUPDATED) {
       return JSON.parse(msg.notificationElem.detail).opUser.faceURL;
     }
+    console.log("switchFaceUrl", msg);
     return msg.senderFaceUrl;
   }, []);
 
@@ -195,7 +196,7 @@ const MsgItem: FC<MsgItemProps> = (props) => {
     () => (
       <div className="cs">
         <div ref={avaRef}>
-          <MyAvatar className="chat_bg_msg_icon" size={42} src={switchFaceUrl} />
+          <MyAvatar className="chat_bg_msg_icon" size={42} padding="10px" nickname={msg.senderNickname} src={switchFaceUrl} />
         </div>
       </div>
     ),

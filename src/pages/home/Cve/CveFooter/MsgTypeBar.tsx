@@ -35,7 +35,7 @@ import GolbalLoading from "../../../../components/GolbalLoading";
 type MsgTypeBarProps = {
   disabled: boolean;
   choseCard: () => void;
-  faceClick: (face: typeof faceMap[0] | CustomEmojiType, type: FaceType) => void;
+  faceClick: (face: (typeof faceMap)[0] | CustomEmojiType, type: FaceType) => void;
   sendMsg: (nMsg: string, type: MessageType, uid?: string, gid?: string, showNotification?: boolean, fileArrayBuffer?: ArrayBuffer, snpArrayBuffer?: ArrayBuffer) => void;
 };
 
@@ -538,7 +538,7 @@ const MsgTypeBar: ForwardRefRenderFunction<MsgTypeBarHandle, MsgTypeBarProps> = 
     });
   };
 
-  const switchAction = (action: typeof actionList[0]) => {
+  const switchAction = (action: (typeof actionList)[0]) => {
     switch (action.idx) {
       case 1:
         return (

@@ -49,7 +49,7 @@ const PersonalSetting = () => {
   };
 
   const onBeeChange = (e: CheckboxChangeEvent) => {
-    updateBusinessSelfInfo({ userID: selfInfo.userID, allowBeep: e.target.checked ? 1 : 2 });
+    updateBusinessSelfInfo({ userID: selfInfo.userID, allowBeep: !e.target.checked ? 2 : 1 });
   };
 
   const onOptChange = async (e: CheckboxChangeEvent) => {

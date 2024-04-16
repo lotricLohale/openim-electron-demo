@@ -47,8 +47,8 @@ const CardMsgModal: FC<CardMsgModalProps> = ({ visible, close, cb }) => {
           {getRenderList().map((f) => (
             <div key={f.userID} className="cons_list_item">
               <div className="cons_list_item_left">
-                <MyAvatar size={32} src={f.faceURL} />
-                <div className="nick">{f.remark == "" ? f.nickname : f.remark}</div>
+                <MyAvatar nickname={f.remark === "" ? f.nickname : f.remark} size={32} src={f.faceURL} />
+                <div className="nick">{f.remark === "" ? f.nickname : f.remark}</div>
               </div>
               <Button onClick={() => sendCardMsg(f)} ghost type="primary" size="small">
                 {t("Send")}
@@ -61,4 +61,4 @@ const CardMsgModal: FC<CardMsgModalProps> = ({ visible, close, cb }) => {
   );
 };
 
-export default memo(CardMsgModal,()=>true);
+export default memo(CardMsgModal, () => true);

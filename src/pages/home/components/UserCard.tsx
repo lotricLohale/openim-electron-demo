@@ -141,7 +141,7 @@ const UserCard: FC<UserCardProps> = ({ visible, cardInfo, inGroup, cardType, clo
       case CardType.FriendInfo:
         const { data } = await getUserInfoByBusiness(cardInfo.friend!.userID);
         const friendBusinessInfo = data.userFullInfoList[0] ?? {};
-        filterEmptyValue(friendBusinessInfo)
+        filterEmptyValue(friendBusinessInfo);
         setCardData({
           userInfo: { ...cardInfo.friend, ...friendBusinessInfo } as UserCardItem,
           groupMemberInfo: (cardInfo.groupMemberItem ?? {}) as GroupMemberCardItem,
@@ -392,10 +392,10 @@ const UserCol: FC<UserColProps> = memo(({ userInfo: { nickname, gender, birth, p
       <CardRow label={t("Sex")} content={getGender(gender)} />
       {type !== CardType.UserInfo && (
         <>
-          <CardRow label={t("Age")} content={getAge(birth*1000)} />
-          <CardRow label={t("Birthday")} content={birth ? formatDate(birth*1000)[3] : "-"} />
-          <CardRow label={t("PhoneNumber")} content={phoneNumber || '-'} />
-          <CardRow label={t("Email")} content={email || '-'} />
+          <CardRow label={t("Age")} content={getAge(birth * 1000)} />
+          <CardRow label={t("Birthday")} content={birth ? formatDate(birth * 1000)[3] : "-"} />
+          <CardRow label={t("PhoneNumber")} content={phoneNumber || "-"} />
+          {/* <CardRow label={t("Email")} content={email || '-'} /> */}
         </>
       )}
       {type === CardType.FriendInfo && <CardRow editFun={editFun} label={t("Note")} content={remark} />}
@@ -477,7 +477,7 @@ const CardTitle = memo(({ baseInfo, cardType, hiddenUserID }: { baseInfo: UserCa
   return (
     <div className="card_title">
       <Upload accept="image/*" openFileDialogOnClick={cardType === CardType.SelfInfo ? true : false} action="" customRequest={(data) => uploadIcon(data)} showUploadList={false}>
-        <MyAvatar src={faceURL} size={48} />
+        <MyAvatar nickname={nickname} src={faceURL} size={48} />
       </Upload>
       <div className="title_right">
         <div className="right_top">
@@ -707,7 +707,7 @@ const ApplyContent: FC<ApplyContentProps> = memo(({ publicInfo: { userID, nickna
         <span>好友验证</span>
       </div>
       <div className="info_row">
-        <MyAvatar src={faceURL} size={48} />
+        <MyAvatar nickname={nickname} src={faceURL} size={48} />
         <div className="right_details">
           <div>{nickname}</div>
           <div>{userID}</div>

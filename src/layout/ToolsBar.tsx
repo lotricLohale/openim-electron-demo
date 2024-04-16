@@ -214,7 +214,7 @@ const ToolsBar: FC<ToolsBarProps> = ({ userInfo }) => {
 
   const popTitle = (
     <div className={styles.tool_self_title}>
-      <MyAvatar className={styles.tool_self_icon} shape="square" size={34} icon={<UserOutlined />} src={userInfo.faceURL} />
+      <MyAvatar className={styles.tool_self_icon} shape="square" nickname={userInfo.nickname} size={34} icon={<UserOutlined />} src={userInfo.faceURL} />
       <Tooltip placement="right" title={userInfo.nickname}>
         <div className={styles.nick_name}>{userInfo.nickname}</div>
       </Tooltip>
@@ -226,7 +226,7 @@ const ToolsBar: FC<ToolsBarProps> = ({ userInfo }) => {
       <div className={styles.tools}>
         <Popover overlayClassName={styles.nomal_pop} trigger="click" placement="right" arrowPointAtCenter={true} content={popContent} title={popTitle} visible={showPop}>
           <div ref={avaRef} onClick={() => setShowPop(true)}>
-            <MyAvatar className={styles.left_avatar} src={userInfo.faceURL} size={36} />
+            <MyAvatar className={styles.left_avatar} nickname={userInfo.nickname} src={userInfo.faceURL} size={36} />
           </div>
         </Popover>
         {tools.map((t, idx) => (

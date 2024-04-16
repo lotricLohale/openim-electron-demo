@@ -10,6 +10,8 @@ import { memo } from "react";
 
 interface MyAvatarProps extends AvatarProps {
   item?: PublicField;
+  nickname?: string;
+  padding?: string;
 }
 
 type PublicField = {
@@ -30,13 +32,21 @@ const MyAvatar = (props: MyAvatarProps) => {
     ic_avatar_06: ic_avatar_06,
   };
 
+  if (!props.src && props.nickname) {
+    return (
+      <div style={{ padding: props.padding ?? "0px" }}>
+        <div style={{ width: "42px", height: "42px", backgroundColor: "#0E1013", borderRadius: "12px", textAlign: "center", lineHeight: "42px", color: "#fff" }}>
+          {props.nickname.split("")[0].toUpperCase()}
+        </div>
+      </div>
+    );
+  }
   if (Object.keys(localList).includes(props.src as string)) {
     //@ts-ignore
     mySrc = localList[props.src as string];
   } else {
     mySrc = props.src;
   }
-
   return <Avatar shape="square" icon={<UserOutlined />} style={{ minWidth: `${props.size ?? 42}px` }} {...props} src={mySrc} />;
 };
 

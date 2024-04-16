@@ -437,7 +437,7 @@ const MeetingPrepare: FC<MeetingPrepareProps> = ({ updateStep }) => {
                 updateStep(LaunchStep.HistoryDisplay, { ...item, startTime: moment(item.startTime * 1000), duration: item.endTime - item.startTime, roomID: item.meetingID })
               }
             >
-              <MyAvatar size={42} src={item.faceURL} />
+              <MyAvatar nickname={item.meetingName} size={42} src={item.faceURL} />
               <div className="record_details">
                 <div className="item_title">
                   <div>{item.meetingName}</div>

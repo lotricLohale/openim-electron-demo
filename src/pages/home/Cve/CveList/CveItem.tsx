@@ -152,7 +152,12 @@ const CveItem: ForwardRefRenderFunction<HTMLDivElement, CveItemProps> = (props, 
       >
         <div onClick={() => onClick(cve)} className={`cve_item ${curCid === cve.conversationID || cve.isPinned ? "cve_item_focus" : ""}`}>
           <Badge size="small" dot={!isRecv(cve?.recvMsgOpt) && cve.unreadCount > 0} count={isRecv(cve?.recvMsgOpt) ? cve.unreadCount : null}>
-            <MyAvatar size={36} src={isNotify(cve.conversationType) ? noti_icon : cve.faceURL === "" && GroupTypes.includes(cve.conversationType) ? group_icon : cve.faceURL} />
+            <MyAvatar
+              nickname={cve.showName}
+              padding={"0px"}
+              size={36}
+              src={isNotify(cve.conversationType) ? noti_icon : cve.faceURL === "" && GroupTypes.includes(cve.conversationType) ? group_icon : cve.faceURL}
+            />
           </Badge>
 
           <div data-time={parseLatestTime(cve.latestMsgSendTime)} className={`cve_info ${isRecv(cve?.recvMsgOpt) ? "" : "cve_info_opt"}`}>
