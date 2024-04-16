@@ -4,7 +4,7 @@
 // export const API_URL = `http://${url}:10002`;
 // export const CONFIG_URL = `http://${url}:10009`;
 
-const url = "im.chatlightly.com";
+const url = "im.633588.com";
 export const REGISTER_URL = `https://${url}/chat`;
 export const WS_URL = `wss://${url}/msg_gateway`;
 export const API_URL = `https://${url}/api`;

@@ -5,10 +5,10 @@
 - For web
 > src->config
 ```bash
-export const REGISTER_URL = "https://im.chatlightly.com/chat" // ->Original 10008 port
-export const CONFIG_URL = "https://im.chatlightly.com/complete_admin" // ->Original 10009 port
-export const WS_URL = "wss://im.chatlightly.com/msg_gateway"   // ->Original 10003 port
-export const API_URL = "https://im.chatlightly.com/api"       // ->Original 10002 port
+export const REGISTER_URL = "https://im.633588.com/chat" // ->Original 10008 port
+export const CONFIG_URL = "https://im.633588.com/complete_admin" // ->Original 10009 port
+export const WS_URL = "wss://im.633588.com/msg_gateway"   // ->Original 10003 port
+export const API_URL = "https://im.633588.com/api"       // ->Original 10002 port
 export const OBJECTSTORAGE: "cos" | "minio" = "minio" // ->object storage default minio
 ```
 

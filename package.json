@@ -168,9 +168,9 @@
       "perMachine": true,
       "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
-      "installerIcon": "./build/icons/logo16x16.ico",
-      "uninstallerIcon": "./build/icons/logo16x16.ico",
-      "installerHeaderIcon": "./build/icons/logo16x16.ico",
+      "installerIcon": "./build/icons/app.ico",
+      "uninstallerIcon": "./build/icons/app.ico",
+      "installerHeaderIcon": "./build/icons/app.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "QieQie"
