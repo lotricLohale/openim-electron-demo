@@ -562,8 +562,8 @@ const Home = () => {
   const sendMsg = useCallback(
     async (nMsg: string, type: MessageType, uid?: string, gid?: string, showNotification = false, fileArrayBuffer?: ArrayBuffer, snpFileArrayBuffer?: ArrayBuffer) => {
       const operationID = uuid();
+      const parsedMsg = JSON.parse(nMsg);
       if ((uid && latestCve.current.userID === uid) || (gid && latestCve.current.groupID === gid) || (!uid && !gid)) {
-        const parsedMsg = JSON.parse(nMsg);
         const tMsgMap = {
           oid: operationID,
           mid: parsedMsg.clientMsgID,
@@ -588,12 +588,13 @@ const Home = () => {
         scrollTo();
       }
       const offlinePushInfo = {
-        title: "你有一条新消息",
+        title: parsedMsg?.senderNickname || "你有一条新消息",
         desc: "你有一条新消息",
         ex: "",
         iOSPushSound: "+1",
         iOSBadgeCount: true,
       };
+      console.log("nMsg", nMsg);
       const sendOption = {
         recvID: uid ?? latestCve.current.userID,
         groupID: gid ?? latestCve.current.groupID,

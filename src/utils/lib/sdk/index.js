@@ -182,7 +182,7 @@ class SDK extends Emitter {
   };
   sendMessage = (params, operationID = uuidv4()) => {
     const offlinePushInfo = params.offlinePushInfo ?? {
-      title: "你有一条新消息",
+      title: params?.senderNickname || "你有一条新消息",
       desc: "",
       ex: "",
       iOSPushSound: "+1",
@@ -192,7 +192,7 @@ class SDK extends Emitter {
   };
   sendMessageNotOss = (params, operationID = uuidv4()) => {
     const offlinePushInfo = params.offlinePushInfo ?? {
-      title: "你有一条新消息",
+      title: params?.senderNickname || "你有一条新消息",
       desc: "",
       ex: "",
       iOSPushSound: "+1",
@@ -202,7 +202,7 @@ class SDK extends Emitter {
   };
   sendMessageByBuffer = (params, operationID = uuidv4()) => {
     const offlinePushInfo = params.offlinePushInfo ?? {
-      title: "你有一条新消息",
+      title: params?.senderNickname || "你有一条新消息",
       desc: "",
       ex: "",
       iOSPushSound: "+1",
