@@ -144,8 +144,9 @@ const RtcModal: FC<RtcModalProps> = ({ visible, isVideo, isSingle, isCalled, inv
   const [mediaDevicesError, setMediaDevicesError] = useState<MediaDeviceFailure>();
 
   const { connect, room, participants, isConnecting, error } = useRoom();
-
-  const latestParticipants = useLatest(participants)
+  const romRef = useRef(room);
+  romRef.current = room;
+  const latestParticipants = useLatest(participants);
 
   useEffect(() => {
     rtcInvite();
@@ -171,16 +172,16 @@ const RtcModal: FC<RtcModalProps> = ({ visible, isVideo, isSingle, isCalled, inv
   }, []);
 
   useUnmount(() => {
-    room?.removeAllListeners();
-    room?.disconnect();
+    romRef.current?.removeAllListeners();
+    romRef.current?.disconnect();
   });
 
   useEffect(() => {
-    room?.on(RoomEvent.ParticipantDisconnected, disconnectHandler);
-    room?.on(RoomEvent.MediaDevicesError, mediaDevicesErrorHandler);
+    romRef.current?.on(RoomEvent.ParticipantDisconnected, disconnectHandler);
+    romRef.current?.on(RoomEvent.MediaDevicesError, mediaDevicesErrorHandler);
     return () => {
-      room?.off(RoomEvent.ParticipantDisconnected, disconnectHandler);
-      room?.off(RoomEvent.MediaDevicesError, mediaDevicesErrorHandler);
+      romRef.current?.off(RoomEvent.ParticipantDisconnected, disconnectHandler);
+      romRef.current?.off(RoomEvent.MediaDevicesError, mediaDevicesErrorHandler);
     };
   }, [room]);
 
@@ -200,7 +201,7 @@ const RtcModal: FC<RtcModalProps> = ({ visible, isVideo, isSingle, isCalled, inv
     if (isSingle) {
       hangupRtc();
     } else {
-      const remainder = latestParticipants.current.filter(p=>p.sid !== removePart.sid)
+      const remainder = latestParticipants.current.filter((p) => p.sid !== removePart.sid);
       if (remainder.length < 2) {
         Modal.confirm({
           content: "是否结束当前通话？",
@@ -335,8 +336,8 @@ const RtcModal: FC<RtcModalProps> = ({ visible, isVideo, isSingle, isCalled, inv
     clearTimer();
     setIsCalling(false);
     console.log(room);
-    room?.removeAllListeners();
-    room?.disconnect();
+    romRef.current?.removeAllListeners();
+    romRef.current?.disconnect(true);
     myClose();
   };
 
@@ -406,7 +407,7 @@ const RtcModal: FC<RtcModalProps> = ({ visible, isVideo, isSingle, isCalled, inv
     setTime(0);
   };
 
-  const clickAction = (action: typeof callingMaps[0]) => {
+  const clickAction = (action: (typeof callingMaps)[0]) => {
     if (action.media_control && mediaDevicesError) {
       return;
     }

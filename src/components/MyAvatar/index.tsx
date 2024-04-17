@@ -7,6 +7,7 @@ import ic_avatar_05 from "@/assets/images/ic_avatar_05.png";
 import ic_avatar_06 from "@/assets/images/ic_avatar_06.png";
 import { UserOutlined } from "@ant-design/icons";
 import { memo } from "react";
+import crypto from "crypto";
 
 interface MyAvatarProps extends AvatarProps {
   item?: PublicField;
@@ -20,6 +21,26 @@ type PublicField = {
   groupID?: string;
   [propName: string]: any;
 };
+
+function md5(input: string) {
+  return crypto.createHash("md5").update(input).digest("hex");
+}
+
+function getColorFromName(name: string) {
+  // 检查名称是否为空，并相应地处理
+  const initialChar = name ? name.substring(0, 1) : "";
+  const md5Hash = md5(initialChar);
+
+  // 构建颜色字符串
+  let colorHex = "#";
+  if (md5Hash && md5Hash.length > 6) {
+    colorHex += md5Hash.substring(0, 6);
+  } else {
+    colorHex += "1D6BED"; // 默认颜色
+  }
+
+  return colorHex;
+}
 
 const MyAvatar = (props: MyAvatarProps) => {
   let mySrc;
@@ -35,7 +56,9 @@ const MyAvatar = (props: MyAvatarProps) => {
   if (!props.src && props.nickname) {
     return (
       <div style={{ padding: props.padding ?? "0px" }}>
-        <div style={{ width: "42px", height: "42px", backgroundColor: "#0E1013", borderRadius: "12px", textAlign: "center", lineHeight: "42px", color: "#fff" }}>
+        <div
+          style={{ width: "42px", height: "42px", backgroundColor: getColorFromName(props.nickname), borderRadius: "12px", textAlign: "center", lineHeight: "42px", color: "#fff" }}
+        >
           {props.nickname.split("")[0].toUpperCase()}
         </div>
       </div>

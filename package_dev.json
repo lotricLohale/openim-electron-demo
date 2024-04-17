@@ -18,7 +18,7 @@
     "i18next": "^21.6.5",
     "i18next-browser-languagedetector": "^6.1.2",
     "livekit-client": "^0.17.0",
-    "livekit-react": "^0.7.0",
+    "livekit-react": "^0.7.1",
     "localforage": "^1.10.0",
     "md5": "^2.3.0",
     "open-im-sdk-web-wasm": "0.0.53",
