@@ -318,7 +318,6 @@ const Home = () => {
         if (newServerMsg.contentType === MessageType.TYPINGMESSAGE) {
           typingUpdate();
         } else if (newServerMsg.contentType === MessageType.EDITMESSAGE) {
-          console.log("newServerMsg", newServerMsg);
           const cItem = JSON.parse(JSON.parse(newServerMsg.content).data);
           events.emit(MSG_UPDATE_CONTENT, cItem.clientMsgID, cItem.newContent, newServerMsg.createTime);
           const parentEl = document.getElementById(`chat_${cItem.clientMsgID}`);

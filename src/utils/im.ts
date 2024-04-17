@@ -43,6 +43,9 @@ export const parseMessageType = (pmsg: MessageItem, curUid?: string, isNotify = 
   switch (pmsg.contentType) {
     case MessageType.TEXTMESSAGE:
       return pmsg.content;
+    case MessageType.EDITMESSAGE:
+      const cItem = JSON.parse(JSON.parse(pmsg.content).data);
+      return cItem.newContent;
     case MessageType.ATTEXTMESSAGE:
       let mstr = pmsg.atElem.text ?? "";
       const pattern = /@\S+\s/g;
