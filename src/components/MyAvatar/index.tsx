@@ -7,7 +7,7 @@ import ic_avatar_05 from "@/assets/images/ic_avatar_05.png";
 import ic_avatar_06 from "@/assets/images/ic_avatar_06.png";
 import { UserOutlined } from "@ant-design/icons";
 import { memo } from "react";
-import crypto from "crypto";
+import CryptoJS from "crypto-js";
 
 interface MyAvatarProps extends AvatarProps {
   item?: PublicField;
@@ -22,21 +22,18 @@ type PublicField = {
   [propName: string]: any;
 };
 
-function md5(input: string) {
-  return crypto.createHash("md5").update(input).digest("hex");
-}
-
 function getColorFromName(name: string) {
-  // 检查名称是否为空，并相应地处理
+  // 判断名称是否为空，并取首字符或空字符串
   const initialChar = name ? name.substring(0, 1) : "";
-  const md5Hash = md5(initialChar);
+  // 使用 crypto-js 库生成 MD5 哈希
+  const md5Hash = CryptoJS.MD5(initialChar).toString();
 
   // 构建颜色字符串
   let colorHex = "#";
   if (md5Hash && md5Hash.length > 6) {
-    colorHex += md5Hash.substring(0, 6);
+      colorHex += md5Hash.substring(0, 6);
   } else {
-    colorHex += "1D6BED"; // 默认颜色
+      colorHex += "1D6BED"; // 默认颜色
   }
 
   return colorHex;

@@ -476,11 +476,16 @@ const SwitchMsgType: FC<SwitchMsgTypeProps> = (props) => {
         const notice = noticeEl.group.notification;
         return <GroupNoticeRender notice={notice} timestamp={timestamp} needMargin={needMargin} />;
       case MessageType.EDITMESSAGE:
-        const cItem = JSON.parse(JSON.parse(msg.content).data);
-        console.log("edit", msg, cItem);
-        events.emit(MSG_UPDATE_CONTENT, cItem.clientMsgID, cItem.newContent, msg.createTime);
-        events.emit(DELETE_MESSAGE, msg.clientMsgID, false, false);
-        return null;
+        try {
+          const cItem = JSON.parse(JSON.parse(msg.content).data);
+          console.log("edit", msg, cItem);
+          events.emit(MSG_UPDATE_CONTENT, cItem.clientMsgID, cItem.newContent, msg.createTime);
+          events.emit(DELETE_MESSAGE, msg.clientMsgID, false, false);
+          return null;
+        } catch (error) {
+          return <TextMsgRender mstr={"[请前往移动端查看]"} timestamp={timestamp} needMargin={needMargin} />;
+        }
+
       default:
         return <div className={`chat_bg_msg_content_text nick_magin`}>{t("UnsupportedMessage")}</div>;
     }
