@@ -676,6 +676,7 @@ export enum Platform {
 
 export enum MessageType {
   TEXTMESSAGE = 101,
+  EDITMESSAGE = 300,
   PICTUREMESSAGE = 102,
   VOICEMESSAGE = 103,
   VIDEOMESSAGE = 104,

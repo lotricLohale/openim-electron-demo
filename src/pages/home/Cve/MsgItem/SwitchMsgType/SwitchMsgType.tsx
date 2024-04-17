@@ -2,7 +2,16 @@ import { Tooltip, Image, Spin, Progress, message, Typography } from "antd";
 import { useState, useRef, CSSProperties, useEffect, FC, useMemo, memo } from "react";
 import { useSelector, shallowEqual } from "react-redux";
 import { LngLat, Map, Marker } from "react-amap";
-import { IMG_PREVIEW_CLICK, JOIN_MEETING, MER_MSG_MODAL, SHOW_LOCATION_MODAL, SHOW_PLAYER_MODAL, SIGNAL_INGINVITE } from "../../../../../constants/events";
+import {
+  DELETE_MESSAGE,
+  IMG_PREVIEW_CLICK,
+  JOIN_MEETING,
+  MER_MSG_MODAL,
+  MSG_UPDATE_CONTENT,
+  SHOW_LOCATION_MODAL,
+  SHOW_PLAYER_MODAL,
+  SIGNAL_INGINVITE,
+} from "../../../../../constants/events";
 import { faceMap } from "../../../../../constants/faceType";
 import { customType } from "../../../../../constants/messageContentType";
 import { RootState } from "../../../../../store";
@@ -374,6 +383,7 @@ const SwitchMsgType: FC<SwitchMsgTypeProps> = (props) => {
         if (isNotice) {
           return <NoticeRender noticeDetail={noticeDetail} timestamp={timestamp} />;
         }
+        console.log("default", msg);
         // 原有逻辑
         let mstr = msg.content ?? "";
         mstr = parseEmojiFace(mstr);
@@ -465,10 +475,16 @@ const SwitchMsgType: FC<SwitchMsgTypeProps> = (props) => {
         const noticeEl = JSON.parse(msg.notificationElem.detail);
         const notice = noticeEl.group.notification;
         return <GroupNoticeRender notice={notice} timestamp={timestamp} needMargin={needMargin} />;
+      case MessageType.EDITMESSAGE:
+        const cItem = JSON.parse(JSON.parse(msg.content).data);
+        console.log("edit", msg, cItem);
+        events.emit(MSG_UPDATE_CONTENT, cItem.clientMsgID, cItem.newContent, msg.createTime);
+        events.emit(DELETE_MESSAGE, msg.clientMsgID, false, false);
+        return null;
       default:
         return <div className={`chat_bg_msg_content_text nick_magin`}>{t("UnsupportedMessage")}</div>;
     }
-  }, [msg.status, msg.progress, msg.downloadProgress, msg.pictureElem.sourcePicture.url, needMargin, blackList]);
+  }, [msg.status, msg.progress, msg.content, msg.downloadProgress, msg.pictureElem.sourcePicture.url, needMargin, blackList]);
 
   return MsgType;
 };

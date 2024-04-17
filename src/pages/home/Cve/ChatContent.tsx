@@ -33,7 +33,7 @@ const ParseTip = ({ msg, curCve, isSelf }: { msg: MessageItem; isSelf: (id: stri
   if (RevokeTypes.includes(msg.contentType)) {
     let revokerID = msg.sendID;
     let revoker = isSelf(msg.sendID) ? t("You") : isSingleCve(curCve!) ? curCve?.showName : msg.senderNickname;
-    let sourcer = ""
+    let sourcer = "";
     const isAdvanced = msg.contentType === MessageType.ADVANCEREVOKEMESSAGE;
     let isAdminRevoke = false;
     if (isAdvanced) {
@@ -98,11 +98,7 @@ const ParseTip = ({ msg, curCve, isSelf }: { msg: MessageItem; isSelf: (id: stri
       let inviteUsers: any[] = [];
       invitedUserList.forEach((user: any, idx: number) => {
         if (idx < 3) {
-          inviteUsers.push(
-            <b key={user.userID}>
-              {(isSelf(user.userID) ? t("You") : user.nickname) + (idx === invitedUserList.length - 1 || idx === 2 ? " " : "、")}
-            </b>
-          );
+          inviteUsers.push(<b key={user.userID}>{(isSelf(user.userID) ? t("You") : user.nickname) + (idx === invitedUserList.length - 1 || idx === 2 ? " " : "、")}</b>);
         }
       });
       return (
@@ -119,11 +115,7 @@ const ParseTip = ({ msg, curCve, isSelf }: { msg: MessageItem; isSelf: (id: stri
       const kickdUserList = kickDetails.kickedUserList ?? [];
       let kickUsers: any[] = [];
       kickdUserList.forEach((user: any, idx: number) =>
-        kickUsers.push(
-          <b key={user.userID}>
-            {(isSelf(user.userID) ? t("You") : user.nickname) + (idx === kickdUserList.length - 1 ? " " : "、")}
-          </b>
-        )
+        kickUsers.push(<b key={user.userID}>{(isSelf(user.userID) ? t("You") : user.nickname) + (idx === kickdUserList.length - 1 ? " " : "、")}</b>)
       );
       return (
         <>
@@ -193,7 +185,7 @@ const ChatContent: FC<ChatContentProps> = (props) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const update = useUpdate();
 
-  const isRobot = useMemo(()=>robots.includes(curCve?.userID ?? ''),[curCve?.userID,robots])
+  const isRobot = useMemo(() => robots.includes(curCve?.userID ?? ""), [curCve?.userID, robots]);
 
   useEffect(() => {
     events.on(MUTIL_MSG, mutilHandler);
@@ -249,7 +241,17 @@ const ChatContent: FC<ChatContentProps> = (props) => {
               <MemoParse msg={msg} isSelf={isSelf} curCve={curCve!} />
             </div>
           ) : (
-            <MsgItem isRobot={isRobot} isMerge={isMerge} audio={audioRef} flag={flag} key={msg.clientMsgID} mutilSelect={mutilSelect} msg={msg} selfID={merID ?? selfID} curCve={curCve!} />
+            <MsgItem
+              isRobot={isRobot}
+              isMerge={isMerge}
+              audio={audioRef}
+              flag={flag}
+              key={msg.clientMsgID}
+              mutilSelect={mutilSelect}
+              msg={msg}
+              selfID={merID ?? selfID}
+              curCve={curCve!}
+            />
           )
         )}
       </ScrollView>

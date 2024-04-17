@@ -22,6 +22,7 @@ import {
   IS_SET_DRAFT,
   MER_MSG_MODAL,
   MSG_UPDATE,
+  MSG_UPDATE_CONTENT,
   MUTIL_MSG,
   OPEN_GROUP_MODAL,
   RESET_CVE,
@@ -174,6 +175,7 @@ const Home = () => {
     events.on(MER_MSG_MODAL, merModalHandler);
     events.on(INSERT_TO_CURCVE, insertMsgHandler);
     events.on(MSG_UPDATE, msgUpdateHandler);
+    events.on(MSG_UPDATE_CONTENT, msgUpdateContent);
     window.electron && window.electron.addIpcRendererListener("DownloadFinish", downloadFinishHandler, "downloadListener");
     window.electron && window.electron.addIpcRendererListener("DownloadUpdated", downloadUpdatedHandler, "DownloadUpdatedListener");
     return () => {
@@ -183,6 +185,7 @@ const Home = () => {
       events.off(MER_MSG_MODAL, merModalHandler);
       events.off(INSERT_TO_CURCVE, insertMsgHandler);
       events.off(MSG_UPDATE, msgUpdateHandler);
+      events.off(MSG_UPDATE_CONTENT, msgUpdateContent);
       window.electron && window.electron.removeIpcRendererListener("downloadListener");
       window.electron && window.electron.removeIpcRendererListener("DownloadUpdatedListener");
     };
@@ -214,7 +217,16 @@ const Home = () => {
       msgForceRender(msg.clientMsgID);
     }
   };
-
+  const msgUpdateContent = (clientMsgID: string, content: string, createTime: number) => {
+    const idx = rs.historyMsgList.findIndex((m) => m.clientMsgID === clientMsgID);
+    const tMsg = rs.historyMsgList[idx] as any;
+    if (idx > -1 && (!tMsg._upDataLastTime || tMsg._upDataLastTime < createTime)) {
+      tMsg.content = content;
+      tMsg._upDataLastTime = createTime;
+      rs.historyMsgList[idx] = { ...tMsg };
+      msgForceRender(clientMsgID);
+    }
+  };
   const merModalHandler = (el: MergeElem, sender: string) => {
     rs.merData = { ...el, sender };
     rs.merModal = true;
@@ -289,7 +301,6 @@ const Home = () => {
 
   const newMsgsHandler = (data: WsResponse) => {
     const newServerMsgs: MessageItem[] = JSON.parse(data.data);
-    console.log(newServerMsgs);
     newServerMsgs.forEach(handleNewMsg);
   };
 
@@ -306,6 +317,12 @@ const Home = () => {
         events.emit(CHECK_USER_ONLINE);
         if (newServerMsg.contentType === MessageType.TYPINGMESSAGE) {
           typingUpdate();
+        } else if (newServerMsg.contentType === MessageType.EDITMESSAGE) {
+          console.log("newServerMsg", newServerMsg);
+          const cItem = JSON.parse(JSON.parse(newServerMsg.content).data);
+          events.emit(MSG_UPDATE_CONTENT, cItem.clientMsgID, cItem.newContent, newServerMsg.createTime);
+          const parentEl = document.getElementById(`chat_${cItem.clientMsgID}`);
+          if (parentEl) parentEl.getElementsByClassName("text_container")[0].innerHTML = cItem.newContent;
         } else {
           if (newServerMsg.contentType === MessageType.REVOKEMESSAGE) {
             const nomaList = rs.historyMsgList.filter((ms) => ms.clientMsgID !== newServerMsg.content);
