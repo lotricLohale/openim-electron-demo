@@ -76,6 +76,7 @@
     "RemoveMembers": "移除成员",
     "RemoveMembersSuc": "移除成功！",
     "ForwardedMessage": "转发消息",
+    "ForwardedMessageFrom": "转发的消息 来自：{{user}}",
     "GroupName": "群名称",
     "GroupNameTip": "请输入群名称",
     "GroupAvatar": "群头像",

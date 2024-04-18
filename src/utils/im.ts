@@ -22,6 +22,8 @@ const switchCustomMsg = (cMsg: any, isSelfMsg: boolean) => {
   switch (cMsg.customType) {
     case customType.MassMsg:
       return "[通知消息]";
+    case customType.TextMsg:
+      return "[转发消息]";
     case customType.Call:
       return "[语音通话]";
     case customType.MeetingInvitation:

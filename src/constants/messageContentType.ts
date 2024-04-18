@@ -57,6 +57,7 @@ export enum customType {
   VoiceCall = "c101",
   Call = 901,
   MassMsg = 903,
+  TextMsg = 914,
   MeetingInvitation = 905,
   InsertLoading = 999,
 }

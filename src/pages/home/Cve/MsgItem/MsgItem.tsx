@@ -62,6 +62,7 @@ const MsgItem: FC<MsgItemProps> = (props) => {
   const avaRef = useRef<HTMLDivElement>(null);
   const msgItemRef = useRef<HTMLDivElement>(null);
   const [inViewport] = useInViewport(msgItemRef);
+  const [menuData, setMenuData] = useState(msg);
   const { t } = useTranslation();
   const isSingle = useRef<boolean>(isSingleCve(curCve));
 
@@ -267,6 +268,15 @@ const MsgItem: FC<MsgItemProps> = (props) => {
     return null;
   };
 
+  useEffect(() => {
+    if (msg.contentType === MessageType.CUSTOMMESSAGE && msg?.customElem?.data) {
+      const customData = JSON.parse(msg.customElem.data);
+      if (customData.customType === customType.TextMsg) {
+        customData.data._pData = msg;
+        setMenuData(customData.data);
+      }
+    }
+  }, [msg]);
   return (
     <div
       ref={msgItemRef}
@@ -283,7 +293,7 @@ const MsgItem: FC<MsgItemProps> = (props) => {
       {SenderFace}
       <div style={contentStyle} className="chat_bg_msg_content">
         {MsgNameAndTime}
-        <MsgMenu key={msg.clientMsgID} visible={contextMenuVisible} msg={msg} isSelf={isSelf(msg.sendID)} visibleChange={menuVisibleChange}>
+        <MsgMenu key={msg.clientMsgID} visible={contextMenuVisible} msg={menuData} isSelf={isSelf(msg.sendID)} visibleChange={menuVisibleChange}>
           <SwitchMsgType {...props} msgUploadProgress={msg.progress} msgDownloadProgress={msg.downloadProgress} />
         </MsgMenu>
       </div>

@@ -61,9 +61,10 @@ const MsgMenu: FC<MsgMenuProps> = ({ visible, msg, isSelf, visibleChange, childr
       .catch((err) => message.error(t("RevokeMessageFailed")));
   };
   const delRemoteRecord = () => {
-    im.deleteMessageFromLocalAndSvr(JSON.stringify(msg))
+    let tMsg = (msg as any)._pData ?? msg;
+    im.deleteMessageFromLocalAndSvr(JSON.stringify(tMsg))
       .then((res) => {
-        events.emit(DELETE_MESSAGE, msg.clientMsgID);
+        events.emit(DELETE_MESSAGE, tMsg.clientMsgID);
       })
       .catch((err) => message.error(t("DeleteMessageFailed")));
   };

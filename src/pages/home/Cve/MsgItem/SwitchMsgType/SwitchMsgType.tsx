@@ -317,6 +317,8 @@ const SwitchMsgType: FC<SwitchMsgTypeProps> = (props) => {
         ) : (
           <TextMsgRender mstr={cMsg.data.text} timestamp={msg.sendTime} needMargin={needMargin} />
         );
+      case customType.TextMsg:
+        return null;
       case customType.Call:
         return (
           <CustomCallMsgRender
@@ -383,7 +385,6 @@ const SwitchMsgType: FC<SwitchMsgTypeProps> = (props) => {
         if (isNotice) {
           return <NoticeRender noticeDetail={noticeDetail} timestamp={timestamp} />;
         }
-        console.log("default", msg);
         // 原有逻辑
         let mstr = msg.content ?? "";
         mstr = parseEmojiFace(mstr);
@@ -467,6 +468,15 @@ const SwitchMsgType: FC<SwitchMsgTypeProps> = (props) => {
         const customEl = msg.customElem;
         try {
           const customData = JSON.parse(customEl.data);
+          if (customData.customType === customType.TextMsg) {
+            console.log(customData.data);
+            return (
+              <div className="forward-view">
+                <span className="forward-view-form">{customData?.data?.senderNickname ? t("ForwardedMessageFrom", { user: customData.data.senderNickname }) : ""}</span>
+                <SwitchMsgType {...props} msg={customData.data} />
+              </div>
+            );
+          }
           return switchCustomMsg(customData);
         } catch (error) {
           return <TextMsgRender mstr={"请前往移动端查看"} timestamp={timestamp} needMargin={needMargin} />;
@@ -478,14 +488,12 @@ const SwitchMsgType: FC<SwitchMsgTypeProps> = (props) => {
       case MessageType.EDITMESSAGE:
         try {
           const cItem = JSON.parse(JSON.parse(msg.content).data);
-          console.log("edit", msg, cItem);
           events.emit(MSG_UPDATE_CONTENT, cItem.clientMsgID, cItem.newContent, msg.createTime);
           events.emit(DELETE_MESSAGE, msg.clientMsgID, false, false);
           return null;
         } catch (error) {
           return <TextMsgRender mstr={"[请前往移动端查看]"} timestamp={timestamp} needMargin={needMargin} />;
         }
-
       default:
         return <div className={`chat_bg_msg_content_text nick_magin`}>{t("UnsupportedMessage")}</div>;
     }
