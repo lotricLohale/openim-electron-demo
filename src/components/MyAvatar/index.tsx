@@ -31,9 +31,9 @@ function getColorFromName(name: string) {
   // 构建颜色字符串
   let colorHex = "#";
   if (md5Hash && md5Hash.length > 6) {
-      colorHex += md5Hash.substring(0, 6);
+    colorHex += md5Hash.substring(0, 6);
   } else {
-      colorHex += "1D6BED"; // 默认颜色
+    colorHex += "1D6BED"; // 默认颜色
   }
 
   return colorHex;
@@ -54,7 +54,7 @@ const MyAvatar = (props: MyAvatarProps) => {
     return (
       <div style={{ padding: props.padding ?? "0px" }}>
         <div
-          style={{ width: "42px", height: "42px", backgroundColor: getColorFromName(props.nickname), borderRadius: "12px", textAlign: "center", lineHeight: "42px", color: "#fff" }}
+          style={{ width: "36px", height: "36px", backgroundColor: getColorFromName(props.nickname), borderRadius: "12px", textAlign: "center", lineHeight: "36px", color: "#fff" }}
         >
           {props.nickname.split("")[0].toUpperCase()}
         </div>
