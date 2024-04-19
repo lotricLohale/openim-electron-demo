@@ -15,7 +15,7 @@ import rtc_video_baned from "@/assets/images/rtc_video_baned.png";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { t } from "i18next";
 import { events, im, isSingleCve, sec2Format } from "../../../utils";
-import { CbEvents } from "../../../utils/open_im_sdk";
+import { CbEvents, uuid } from "../../../utils/open_im_sdk";
 import { FullUserItem, GroupItem, GroupMemberItem, PublicUserItem, RtcInvite, SessionType } from "../../../utils/open_im_sdk/types";
 import { customType } from "../../../constants/messageContentType";
 import { useLatest, useUnmount } from "ahooks";
@@ -187,13 +187,14 @@ const RtcModal: FC<RtcModalProps> = ({ visible, isVideo, isSingle, isCalled, inv
 
   const acceptHandler = async () => isSingle && (await connectRtc(connConfig.current.url, connConfig.current.token));
   const rejectHandler = () => {
+    console.log("rejectHandler");
     if (isSingle) {
-      insertMessage("refused");
+      insertMessage("beRejected");
       myClose();
     }
   };
   const cancelHandler = () => {
-    insertMessage("canceled");
+    insertMessage("beCanceled");
     isSingle && myClose();
   };
   const timeoutHandler = () => isSingle && invitation.groupID === "" && cancelRtc(true);
@@ -241,9 +242,9 @@ const RtcModal: FC<RtcModalProps> = ({ visible, isVideo, isSingle, isCalled, inv
       const tmpArr: RemoteParticipant[] = [];
       let tmpLocalPart: LocalParticipant | undefined = undefined;
       participants.forEach((participant) => {
-        // if (getVideoTrack(participant) || getAudioTrack(participant)) {
-        participant instanceof LocalParticipant ? (tmpLocalPart = participant) : tmpArr.push(participant as RemoteParticipant);
-        // }
+        if (getVideoTrack(participant) || getAudioTrack(participant)) {
+          participant instanceof LocalParticipant ? (tmpLocalPart = participant) : tmpArr.push(participant as RemoteParticipant);
+        }
       });
       if (!isSingle && tmpLocalPart) {
         tmpArr.push(tmpLocalPart as unknown as RemoteParticipant);
@@ -312,7 +313,13 @@ const RtcModal: FC<RtcModalProps> = ({ visible, isVideo, isSingle, isCalled, inv
       })
       .catch((err) => handleError(err));
   };
-
+  const signalingHungUp = () => {
+    im.signalingHungUp({ opUserID: selfInfo.userID, invitation })
+      .then(() => {
+        myClose();
+      })
+      .catch((err) => handleError(err));
+  };
   const acceptRtc = () => {
     im.signalingAccept({ opUserID: selfInfo.userID, invitation })
       .then(({ data }) => {
@@ -324,7 +331,7 @@ const RtcModal: FC<RtcModalProps> = ({ visible, isVideo, isSingle, isCalled, inv
   const refusertc = () => {
     im.signalingReject({ opUserID: selfInfo.userID, invitation })
       .then(() => {
-        insertMessage("refuse");
+        insertMessage("rejected");
         myClose();
       })
       .catch((err) => handleError(err));
@@ -332,8 +339,9 @@ const RtcModal: FC<RtcModalProps> = ({ visible, isVideo, isSingle, isCalled, inv
 
   const hangupRtc = async () => {
     const timeStr = sec2Format(latestTime.current);
-    insertMessage("success", timeStr);
+    insertMessage("hangup", timeStr);
     clearTimer();
+    signalingHungUp();
     setIsCalling(false);
     console.log(room);
     romRef.current?.removeAllListeners();
@@ -342,12 +350,30 @@ const RtcModal: FC<RtcModalProps> = ({ visible, isVideo, isSingle, isCalled, inv
   };
 
   const insertMessage = async (status: string, timeStr?: string) => {
+    if (status === "beCanceled" || status === "rejected" || (status === "hangup" && isCalled)) return;
+    const switchCallStatus = (status: string) => {
+      switch (status) {
+        case "hangup":
+          return "通话时长";
+        case "cancel":
+          return "已取消";
+        case "beCanceled":
+          return "已被取消";
+        case "rejected":
+          return "已拒绝";
+        case "beRejected":
+          return "已被拒绝";
+        case "timeout":
+          return "超时未接听";
+      }
+    };
     const data = {
       customType: customType.Call,
       data: {
-        duration: timeStr ?? "",
-        type: isVideo ? customType.VideoCall : customType.VoiceCall,
-        status,
+        duration: latestTime.current ?? "",
+        type: isVideo ? "video" : "audio",
+        state: status,
+        msg: `${switchCallStatus(status)}${status === "hangup" ? " " + timeStr : ""}`,
       },
     };
     const config = {
@@ -356,24 +382,22 @@ const RtcModal: FC<RtcModalProps> = ({ visible, isVideo, isSingle, isCalled, inv
       description: "RTC",
     };
     const { data: message } = await im.createCustomMessage(config);
-    let newMessageStr;
+    let sendData;
     if (isSingle) {
-      newMessageStr = (
-        await im.insertSingleMessageToLocalStorage({
-          message,
-          recvID: invitation.inviteeUserIDList[0],
-          sendID: invitation.inviterUserID,
-        })
-      ).data;
+      sendData = {
+        message,
+        recvID: invitation.inviteeUserIDList[0],
+        sendID: invitation.inviterUserID,
+      };
     } else {
-      newMessageStr = (
-        await im.insertGroupMessageToLocalStorage({
-          message,
-          groupID: invitation.groupID,
-          sendID: invitation.inviterUserID,
-        })
-      ).data;
+      sendData = {
+        message,
+        groupID: invitation.groupID,
+        sendID: invitation.inviterUserID,
+      };
     }
+    console.log("sendData", sendData);
+    const { data: newMessageStr } = await im.sendMessage(sendData, uuid("uuid"));
     const inCurSingle = curCve && isSingleCve(curCve) && (curCve.userID === invitation.inviterUserID || curCve.userID === invitation.inviteeUserIDList[0]);
     const inCurGroup = curCve && curCve.groupID === invitation.groupID;
     if (inCurSingle || inCurGroup) {
@@ -426,6 +450,7 @@ const RtcModal: FC<RtcModalProps> = ({ visible, isVideo, isSingle, isCalled, inv
   };
 
   const switchAction = async (type: RtcActionTypes) => {
+    console.log("switchAction", type);
     switch (type) {
       case RtcActionTypes.Access:
         acceptRtc();

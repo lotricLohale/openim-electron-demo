@@ -53,8 +53,8 @@ export const RevokeTypes = [MessageType.REVOKEMESSAGE, MessageType.ADVANCEREVOKE
 export const GroupTypes = [SessionType.Group, SessionType.SuperGroup];
 
 export enum customType {
-  VideoCall = "c100",
-  VoiceCall = "c101",
+  VideoCall = "video",
+  VoiceCall = "audio",
   Call = 901,
   MassMsg = 903,
   TextMsg = 914,

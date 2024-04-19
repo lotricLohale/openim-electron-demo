@@ -587,6 +587,7 @@ const Home = () => {
         }, 2000);
         scrollTo();
       }
+      console.log("onHangup", parsedMsg, latestCve.current.groupID);
       const offlinePushInfo = {
         title: parsedMsg?.senderNickname || "你有一条新消息",
         desc: "你有一条新消息",
@@ -594,6 +595,10 @@ const Home = () => {
         iOSPushSound: "+1",
         iOSBadgeCount: true,
       };
+      if (latestCve.current?.groupID) {
+        offlinePushInfo.title = latestCve.current.showName || "你有一条新消息";
+        offlinePushInfo.desc = `${parsedMsg?.senderNickname}发了一条消息`;
+      }
       console.log("nMsg", nMsg);
       const sendOption = {
         recvID: uid ?? latestCve.current.userID,

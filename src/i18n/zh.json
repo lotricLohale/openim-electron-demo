@@ -473,5 +473,13 @@
         "2810Msg": "已启用预约销毁。<br></br>亲爱的{{user}}，我们于 （<noticeColor>{{time}}</noticeColor>）为您的账户设置了 预约销毁 功能。<br></br>设备：<noticeColor>{{drive}}</noticeColor><br></br>地址：<noticeColor>{{address}}</noticeColor>，IP = {{ip}}<br></br>如果您无法识别此活动，请查看您的活跃会话：我的>安全>设备（或者消息栏右上角的设备）。<br></br><br></br>如果您想更改此设置，请前往 我的>安全>预约销毁 中进行更改<br></br>如果您想更改此设置，请查看您的安全设置：我的>安全>两步验证<br></br><br></br>保持警惕，<br></br>QieQie团队<br></br>",
         "2811Msg": "已禁用预约销毁。<br></br>亲爱的{{user}}，您的账号于 （<noticeColor>{{time}}</noticeColor>）禁用了 预约销毁 功能。<br></br>设备：<noticeColor>{{drive}}</noticeColor><br></br>地址：<noticeColor>{{address}}</noticeColor>，IP = {{ip}}<br></br>如果您无法识别此活动，请查看您的活跃会话：我的>安全>设备（或者消息栏右上角的设备）。<br></br><br></br>如果您想更改此设置，请查看您的安全设置：我的>安全>预约销毁 中进行更改<br></br><br></br>保持警惕，<br></br>QieQie团队<br></br>",
         "2812Msg": "请求重置密码。<br></br>亲爱的{{user}}，我们在 （<noticeColor>{{time}}</noticeColor>）收到一个请求，重置您的QieQie 密码<br></br>设备：<noticeColor>{{drive}}</noticeColor><br></br>地址：<noticeColor>{{address}}</noticeColor>，IP = {{ip}}<br></br>你有7天的时间在我的>安全>两步验证中取消密码重置请求-﹣或者使用下面的按钮。<br></br>如果您直到（<noticeColor>{{lastTime}}</noticeColor>） 才取消该过程，将有可能在不知道当前密码的情况下更改设置中的两步验证密码。<br></br><br></br>如果您想更改此设置，请查看您的安全设置：我的>安全>预约销毁 中进行更改<br></br><br></br>保持警惕，<br></br>QieQie团队<br></br>"
+    },
+    "phoneStatus": {
+        "hangup": "通话时长",
+        "cancel": "已取消",
+        "beCanceled": "已被取消",
+        "rejected": "已拒绝",
+        "beRejected": "已被拒绝",
+        "timeout": "超时未接听"
     }
 }

@@ -270,8 +270,13 @@ const MsgItem: FC<MsgItemProps> = (props) => {
 
   useEffect(() => {
     if (msg.contentType === MessageType.CUSTOMMESSAGE && msg?.customElem?.data) {
-      const customData = JSON.parse(msg.customElem.data);
-      if (customData.customType === customType.TextMsg) {
+      let customData;
+      try {
+        customData = JSON.parse(msg.customElem.data);
+      } catch {
+        console.log("123123", msg);
+      }
+      if (customData?.customType === customType.TextMsg) {
         customData.data._pData = msg;
         setMenuData(customData.data);
       }

@@ -15,7 +15,7 @@ import {
 import { faceMap } from "../../../../../constants/faceType";
 import { customType } from "../../../../../constants/messageContentType";
 import { RootState } from "../../../../../store";
-import { switchFileIcon, bytesToSize, events, parseTime, diffMemo } from "../../../../../utils";
+import { switchFileIcon, bytesToSize, events, parseTime, diffMemo, sec2Format } from "../../../../../utils";
 
 import other_voice from "@/assets/images/voice_other.png";
 import my_voice from "@/assets/images/voice_my.png";
@@ -320,6 +320,7 @@ const SwitchMsgType: FC<SwitchMsgTypeProps> = (props) => {
       case customType.TextMsg:
         return null;
       case customType.Call:
+        console.log("call", cMsg);
         return (
           <CustomCallMsgRender
             getCallConfig={msg.sessionType === SessionType.Single && !isMerge && !isBlackUser ? getCallConfig : null}
@@ -831,22 +832,23 @@ const CustomCallMsgRender = memo(
 
     const switchCallStatus = (status: string) => {
       switch (status) {
-        case "success":
-          return "通话时长";
+        case "hangup":
+        case "beHangup":
+          return t("phoneStatus.hangup");
         case "cancel":
-          return "已取消";
-        case "canceled":
-          return "已被取消";
-        case "refuse":
-          return "已拒绝";
-        case "refused":
-          return "已被拒绝";
+          return t("phoneStatus.cancel");
+        case "beCanceled":
+          return isSelfMsg ? t("phoneStatus.beRejected") : t("phoneStatus.cancel");
+        case "rejected":
+          return t("phoneStatus.rejected");
+        case "beRejected":
+          return isSelfMsg ? t("phoneStatus.beRejected") : t("phoneStatus.rejected");
         case "timeout":
-          return "超时未接听";
+          return t("phoneStatus.timeout");
       }
     };
-
-    const callStr = switchCallStatus(cdata.status) + " " + cdata.duration;
+    console.log("cdata", cdata);
+    const callStr = switchCallStatus(cdata.status ?? cdata.state) + `${cdata.duration > 0 ? ` ${sec2Format(cdata.duration)}` : ""}`;
 
     const reCall = () => {
       if (getCallConfig) {
