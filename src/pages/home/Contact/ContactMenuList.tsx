@@ -23,14 +23,14 @@ const ConsMenuItem: FC<ConsMenuItemProps> = ({ menu, onClick, curTab }) => {
   const recvGroupApplicationList = useSelector((state: RootState) => state.contacts.recvGroupApplicationList, shallowEqual);
 
   useEffect(() => {
-    events.on(APPLICATION_ACCESS_UPDATE,getUnAccess)
+    events.on(APPLICATION_ACCESS_UPDATE, getUnAccess);
     return () => {
-      events.off(APPLICATION_ACCESS_UPDATE,getUnAccess)
-    }
-  },[])
-  
+      events.off(APPLICATION_ACCESS_UPDATE, getUnAccess);
+    };
+  }, []);
+
   useEffect(() => {
-    getUnAccess()
+    getUnAccess();
   }, [recvFriendApplicationList, recvGroupApplicationList]);
 
   const getUnAccess = async () => {
@@ -65,7 +65,7 @@ const ConsMenuItem: FC<ConsMenuItemProps> = ({ menu, onClick, curTab }) => {
 
   return (
     <div onClick={() => onClick(menu)} key={menu.idx} className={`cve_item ${menu.title === curTab ? "cve_item_focus" : ""}`}>
-      <div className="con_icon" style={{ backgroundColor: menu.bgc }}>
+      <div className="con_icon">
         <Badge size="small" count={setCount(menu.idx)}>
           <img src={menu.icon} alt="" />
         </Badge>
@@ -109,7 +109,7 @@ type OrzMenuListProps = {
   renderItem: (item: MenuItem) => JSX.Element;
 };
 
-export const OrzMenuList: FC<OrzMenuListProps> = ({ startIdx,className, renderItem }) => {
+export const OrzMenuList: FC<OrzMenuListProps> = ({ startIdx, className, renderItem }) => {
   const selfOrzInfo = useSelector((state: RootState) => state.contacts.organizationInfo, shallowEqual).deps;
   const [orzMenu, setOrzMenu] = useState<MenuItem[]>([]);
   const { t } = useTranslation();
@@ -150,5 +150,5 @@ export const OrzMenuList: FC<OrzMenuListProps> = ({ startIdx,className, renderIt
         <List itemLayout="horizontal" dataSource={orzMenu} split={false} renderItem={renderItem} />
       </div>
     </div>
-  ):null;
+  ) : null;
 };

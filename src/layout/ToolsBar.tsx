@@ -2,12 +2,12 @@ import { Badge, Layout, Modal, Popover, Tooltip } from "antd";
 
 import styles from "./layout.module.less";
 
-import cve from "@/assets/images/cve.png";
-import cve_select from "@/assets/images/cve_select.png";
+import cve from "@/assets/images/cve.svg";
+import cve_select from "@/assets/images/cve_select.svg";
 import workbench from "@/assets/images/workbench.png";
 import workbench_select from "@/assets/images/workbench_select.png";
-import cons from "@/assets/images/cons.png";
-import cons_select from "@/assets/images/cons_select.png";
+import cons from "@/assets/images/cons.svg";
+import cons_select from "@/assets/images/cons_select.svg";
 import togetherSend from "@/assets/images/together_send.png";
 import togetherSend_select from "@/assets/images/together_send_select.png";
 import { useResolvedPath, useMatch, useNavigate } from "react-router";
@@ -83,7 +83,7 @@ const ToolIcon = ({ tool }: { tool: ToolItem }) => {
         <div className={styles.tool_icon}>
           <Badge size="small" offset={[-12, -2]} count={tool.idx === 0 ? unReadCount : tool.idx === 1 ? applications : null}>
             <div className={`${styles.tool_container} ${match ? styles.tool_container_focus : ""}`}>
-              <img width="18" height="18" src={match ? tool.icon_select : tool.icon} />
+              <img width="20" height="20" src={match ? tool.icon_select : tool.icon} />
               <div>{tool.tip}</div>
             </div>
           </Badge>
@@ -225,7 +225,7 @@ const ToolsBar: FC<ToolsBarProps> = ({ userInfo }) => {
     <Sider width="60" theme="light" className={styles.tool_bar}>
       <div className={styles.tools}>
         <Popover overlayClassName={styles.nomal_pop} trigger="click" placement="right" arrowPointAtCenter={true} content={popContent} title={popTitle} visible={showPop}>
-          <div ref={avaRef} onClick={() => setShowPop(true)}>
+          <div style={{ marginBottom: "20px" }} ref={avaRef} onClick={() => setShowPop(true)}>
             <MyAvatar className={styles.left_avatar} nickname={userInfo.nickname} src={userInfo.faceURL} size={36} />
           </div>
         </Popover>

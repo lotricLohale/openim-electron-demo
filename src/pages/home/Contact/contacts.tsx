@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next";
 
 const { Content } = Layout;
 
-const showBtmIDList = [1,2,4,5]
+const showBtmIDList = [1, 2, 4, 5];
 
 const Contacts = () => {
   const { t } = useTranslation();
@@ -23,35 +23,35 @@ const Contacts = () => {
     {
       title: t("CommonContacts"),
       icon: nomal_cons,
-      bgc: "#FEC757",
+      bgc: "#fff",
       idx: 0,
       suffix: "nc",
     },
     {
       title: t("NewFriend"),
       icon: new_friend,
-      bgc: "#428BE5",
+      bgc: "#fff",
       idx: 1,
       suffix: "nf",
     },
     {
       title: t("NewGroups"),
       icon: new_group,
-      bgc: "#428BE5",
+      bgc: "#fff",
       idx: 2,
       suffix: "ng",
     },
     {
       title: t("MyFriends"),
       icon: my_friend,
-      bgc: "#428BE5",
+      bgc: "#fff",
       idx: 3,
       suffix: "mf",
     },
     {
       title: t("MyGroups"),
       icon: my_group,
-      bgc: "#53D39C",
+      bgc: "#fff",
       idx: 4,
       suffix: "mg",
     },
@@ -69,9 +69,7 @@ const Contacts = () => {
     if (item.idx !== menu.idx) {
       setMenu(item);
     }
-
   };
-  
 
   return (
     <>
