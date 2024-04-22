@@ -8,6 +8,7 @@ import { getSDK } from "./lib";
 import localforage from "localforage";
 import { ConversationItem, FriendApplicationItem, GroupApplicationItem, MessageItem, MessageType, SessionType } from "./open_im_sdk/types";
 import store from "../store";
+import logo_url from "../assets/images/logo64x64.png";
 import { getNoticeCodeWidthTitle } from "../pages/home/Cve/MsgItem/notice";
 
 // export const im = new OpenIMSDK();
@@ -223,11 +224,12 @@ export const createNotification = async (message: MessageItem, click?: (id: stri
         } catch (error) {}
       }
     }
+    console.log("message.senderFaceUrl:", message.senderFaceUrl);
     const notification = new Notification(title, {
       dir: "auto",
       tag: tag ?? (message.groupID ? message.groupID : message.sendID),
       renotify: true,
-      icon: message.senderFaceUrl,
+      icon: message.senderFaceUrl || logo_url,
       body: parseMessageType(message, undefined, true),
       requireInteraction: true,
     });
