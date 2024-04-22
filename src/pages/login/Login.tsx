@@ -417,7 +417,7 @@ const Login = () => {
         <div className="login-main-box login-main-div">
           <div className="login-box-main">
             <div className="login-box-main-title">
-              <img src={login_title} alt="QieQie" />
+              <img src={login_title} alt="title" />
             </div>
             <div className="login-box-main-welcome"> {t("login.tips")}</div>
             <div className="login-box-main-form">
@@ -430,7 +430,7 @@ const Login = () => {
               onClick={() => {
                 window.electron.openExternal("https://qieqieapp.com");
               }}
-              icon={<img style={{ marginRight: "8px" }} src={appImg} alt="QieQie" />}
+              icon={<img style={{ marginRight: "8px" }} src={appImg} alt="download" />}
             >
               {t("login.appDownloadTips")}
             </Button>

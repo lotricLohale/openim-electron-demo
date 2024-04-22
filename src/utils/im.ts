@@ -46,8 +46,14 @@ export const parseMessageType = (pmsg: MessageItem, curUid?: string, isNotify = 
     case MessageType.TEXTMESSAGE:
       return pmsg.content;
     case MessageType.EDITMESSAGE:
-      const cItem = JSON.parse(JSON.parse(pmsg.content).data);
-      return cItem.newContent;
+      try {
+        const cItem = JSON.parse(JSON.parse(pmsg.content).data);
+        return cItem.newContent;
+      } catch (error) {
+        console.log("pmsg", pmsg);
+        return "[安全会话]";
+      }
+
     case MessageType.ATTEXTMESSAGE:
       let mstr = pmsg.atElem.text ?? "";
       const pattern = /@\S+\s/g;

@@ -318,10 +318,14 @@ const Home = () => {
         if (newServerMsg.contentType === MessageType.TYPINGMESSAGE) {
           typingUpdate();
         } else if (newServerMsg.contentType === MessageType.EDITMESSAGE) {
-          const cItem = JSON.parse(JSON.parse(newServerMsg.content).data);
-          events.emit(MSG_UPDATE_CONTENT, cItem.clientMsgID, cItem.newContent, newServerMsg.createTime);
-          const parentEl = document.getElementById(`chat_${cItem.clientMsgID}`);
-          if (parentEl) parentEl.getElementsByClassName("text_container")[0].innerHTML = cItem.newContent;
+          try {
+            const cItem = JSON.parse(JSON.parse(newServerMsg.content).data);
+            events.emit(MSG_UPDATE_CONTENT, cItem.clientMsgID, cItem.newContent, newServerMsg.createTime);
+            const parentEl = document.getElementById(`chat_${cItem.clientMsgID}`);
+            if (parentEl) parentEl.getElementsByClassName("text_container")[0].innerHTML = cItem.newContent;
+          } catch (error) {
+            msgLimitPush(newServerMsg, 0);
+          }
         } else {
           if (newServerMsg.contentType === MessageType.REVOKEMESSAGE) {
             const nomaList = rs.historyMsgList.filter((ms) => ms.clientMsgID !== newServerMsg.content);
