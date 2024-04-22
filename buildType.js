@@ -74,4 +74,4 @@ const replaceImg = () => {
 indexPaths.forEach((p) => run(p));
 // 替换图片
 // replaceImg();
-console.log("replace success");
+console.log("buildType run...");
