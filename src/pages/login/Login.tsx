@@ -5,19 +5,18 @@ import twoCheckImg from "@/assets/images/login/twoCheck.png";
 import appImg from "@/assets/images/login/app.png";
 import qrCodeImg from "@/assets/images/login/qrcode.png";
 import successImg from "@/assets/images/login/set_success.png";
-import LoginForm, { FormField, InfoField } from "./components/LoginForm";
+import { FormField, InfoField } from "./components/LoginForm";
 import { FC, useState } from "react";
 import { Itype } from "../../@types/open_im";
-import { useHistoryTravel, useLatest, useInterval } from "ahooks";
-import { Route, Routes, useNavigate, useNavigationType, useLocation } from "react-router";
+import { useHistoryTravel, useLatest } from "ahooks";
+import { Route, Routes, useNavigate, useLocation } from "react-router";
 import { Trans, useTranslation } from "react-i18next";
 import md5 from "md5";
-import { getSmsCode, login, modify, phoneLoginCheck, register, reset, sendEmailCode, sendSms, UsedFor, verifyCode, verifyEmailCode } from "../../api/login";
+import { getSmsCode, login, phoneLoginCheck, register, reset, sendEmailCode, sendSms, UsedFor, verifyCode, verifyEmailCode } from "../../api/login";
 import { im, switchLoginError } from "../../utils";
 import { getIMApiUrl, getIMWsUrl } from "../../config";
 import { useDispatch } from "react-redux";
-import { getAppGlobalConfig, getSelfInfo, resetUserStore } from "../../store/actions/user";
-import { shell } from "electron";
+import { getSelfInfo, resetUserStore } from "../../store/actions/user";
 import { getCveList, resetCveStore } from "../../store/actions/cve";
 import {
   getBlackList,
@@ -28,25 +27,21 @@ import {
   getUnReadCount,
   getSentFriendApplicationList,
   getSentGroupApplicationList,
-  getOriginIDList,
-  getOrganizationInfo,
   resetContactStore,
 } from "../../store/actions/contacts";
-import IMConfigModal from "./components/IMConfigModal";
-import TopBar from "../../components/TopBar";
-import { InitConfig } from "../../utils/open_im_sdk/types";
 import { initEmoji } from "../../utils/im";
 import { useSelector, shallowEqual } from "react-redux";
 import { RootState } from "../../store";
 import WindowControlBar from "../../components/WindowControlBar";
 import { useApiLoading, useDidMountEffect } from "../../hooks/common";
 import React from "react";
-import { AntPhone, PhoneData } from "../../components/PhoneInput";
+import { AntPhone } from "../../components/PhoneInput";
 import Countdown from "./components/countdown";
 import { v4 } from "uuid";
 import FormItemText from "./components/formItemText";
 import { ResponseData } from "../../types/common";
 import LoginBg from "./loginBg";
+import { Captcha } from "../../components/src/index";
 
 import "./index.scss";
 
@@ -81,10 +76,11 @@ const Login = () => {
     areaCode: "86",
     invitationCode: "",
   });
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const { value: type, setValue: setType, back } = useHistoryTravel<string>("checkLogin");
+  const { value: type, setValue: setType } = useHistoryTravel<string>("checkLogin");
   const appConfig = useSelector((state: RootState) => state.user.appConfig, shallowEqual);
   const dataRef = React.useRef<{ [name: string]: any }>({});
+  const CaptchaRef = React.useRef<any>();
+  const checkFucRef = React.useRef<any>();
   const lastType = useLatest(type);
 
   const finish = async (values?: FormField | string | InfoField) => {
@@ -198,13 +194,26 @@ const Login = () => {
       case "registerInitGetCode":
       case "initGetCode":
         const areaCode = `+${dataRef.current.phoneData.country.dialCode}`;
-        const codeData = await getSmsCode({
+        const subData = {
           phoneNumber: dataRef.current.phoneNumber.split(areaCode)[1],
           areaCode: areaCode,
           usedFor: lType === "registerGetCode" || lType === "registerInitGetCode" ? 1 : 3,
           platform: 3,
           operationID: v4(),
-        });
+        };
+        let codeData = await getSmsCode(subData);
+        // 判断是否需要滑块
+        if (codeData.errCode === 10001) {
+          // 传入滑块校验方法
+          checkFucRef.current = async (url: string, data: any) => {
+            const cData = await getSmsCode({ ...subData, captchaType: data.captchaType, token: data.token, pointJson: data.pointJson });
+            if (cData.errCode !== 0) return;
+            message.success(t("register.sendCodeSuccess"));
+            return cData;
+          };
+          CaptchaRef.current?.verify();
+          return;
+        }
         if (lType === "initGetCode" || codeData.errCode !== 0) return;
         message.success(t("register.sendCodeSuccess"));
         break;
@@ -220,29 +229,6 @@ const Login = () => {
         break;
     }
   };
-
-  const getCodeAgain = async () => {
-    const isModify = type === "modifycode";
-    const result: any = await sendSms(formData.no, formData.areaCode, isModify ? UsedFor.Modify : UsedFor.Register);
-    if (result.errCode === 0) {
-      message.success(t("SendSuccessTip"));
-    } else {
-      handleError(result);
-    }
-  };
-
-  // const setIMInfo = (values: InfoField) => {
-  //   values.userID = num;
-  //   im.setSelfInfo(values)
-  //     .then((res) => {
-  //       dispatch(setSelfInfo(values));
-  //       navigate("/", { replace: true });
-  //     })
-  //     .catch((err) => {
-  //       toggle("setInfo");
-  //       message.error(t("SetInfoFailed"));
-  //     });
-  // };
 
   const imLogin = async (userID: string, token: string) => {
     localStorage.setItem(`IMareaCode`, dataRef.current.phoneData.country.dialCode);
@@ -413,7 +399,6 @@ const Login = () => {
     return (
       <>
         <LoginBg />
-
         <div className="login-main-box login-main-div">
           <div className="login-box-main">
             <div className="login-box-main-title">
@@ -1002,6 +987,14 @@ const Login = () => {
   return (
     <div className="login-main">
       <WindowControlBar />
+      <Captcha
+        checkFuc={checkFucRef}
+        getUrl="http://im.633588.com/chat/account/get_block_puzzle"
+        onSuccess={(data) => console.log(data)}
+        checkUrl="https://im.633588.com/chat/account/get_block_puzzle"
+        type="auto"
+        ref={CaptchaRef}
+      ></Captcha>
       <Routes>
         <Route index element={<InitLogin />} />
         <Route path="login" element={<Login />} />

@@ -10,6 +10,7 @@ const request = axios.create({
 
 request.interceptors.request.use(
   (config) => {
+    console.log("config", config);
     return config;
   },
   function (error) {
@@ -23,7 +24,7 @@ request.interceptors.response.use(
     if (res.errCode === 0 || res.code === 200) {
       return res;
     } else {
-      message.error(res.errMsg || "操作失败，请稍后再试！");
+      res.errCode !== 10001 && message.error(res.errMsg || "操作失败，请稍后再试！");
       // return Promise.reject(new Error(res.errMsg || '操作失败，请稍后再试！'))
       return Promise.reject(res);
     }

@@ -84,17 +84,22 @@ export const phoneLoginCheck = async (params: PhoneLoginInfo) => {
 
 //检测是否注册
 export const getSmsCode = async (params: SendSmsParams) => {
-  const data = await request.post(
-    "/account/code",
-    {
-      ...params,
-    },
-    {
-      headers: {
-        operationID: v4(),
+  let data;
+  try {
+    data = await request.post(
+      "/account/code",
+      {
+        ...params,
       },
-    }
-  );
+      {
+        headers: {
+          operationID: v4(),
+        },
+      }
+    );
+  } catch (error) {
+    data = error;
+  }
   return data as any;
 };
 

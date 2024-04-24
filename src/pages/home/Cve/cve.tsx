@@ -591,10 +591,17 @@ const Home = () => {
         }, 2000);
         scrollTo();
       }
+      const getTypeDesc = (type: string) => {
+        const descObj: { [key: string]: string } = {
+          [MessageType.TEXTMESSAGE]: "你有一条新消息",
+          [MessageType.PICTUREMESSAGE]: "给你发了张图片",
+        };
+        return descObj[type] || "你有一条新消息";
+      };
       console.log("onHangup", parsedMsg, latestCve.current.groupID);
       const offlinePushInfo = {
         title: parsedMsg?.senderNickname || "你有一条新消息",
-        desc: "你有一条新消息",
+        desc: `${parsedMsg.contentType}`,
         ex: "",
         iOSPushSound: "+1",
         iOSBadgeCount: true,

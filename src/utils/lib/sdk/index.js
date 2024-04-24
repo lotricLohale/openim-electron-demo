@@ -536,7 +536,7 @@ class SDK extends Emitter {
     return this._invoker("refuseGroupApplication ", window.refuseGroupApplication, [operationID, data.groupID, data.fromUserID, data.handleMsg]);
   };
   signalingInvite = (data, operationID = uuidv4()) => {
-    return this._invoker("signalingInvite ", window.signalingInvite, [operationID, JSON.stringify({ invitation: data })]);
+    return this._invoker("signalingInvite ", window.signalingInvite, [operationID, JSON.stringify({ invitation: data, OfflinePushInfo: {} })]);
   };
   signalingInviteInGroup = (data, operationID = uuidv4()) => {
     return this._invoker("signalingInviteInGroup ", window.signalingInviteInGroup, [operationID, JSON.stringify({ invitation: data })]);
