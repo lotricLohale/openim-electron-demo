@@ -11,6 +11,7 @@ const indexPaths = [
   "./electron/utils/tray.ts",
   "./public/index.html",
   "./src/pages/home/Profile/Profile.tsx",
+  "./uninstaller.nsh",
 ];
 
 const imgPaths = {

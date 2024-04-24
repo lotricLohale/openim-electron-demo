@@ -57,7 +57,7 @@
   "main": "build/electron/main.js",
   "homepage": "./",
   "author": "blooming",
-  "description": "Open IM",
+  "description": "QieQie",
   "email": "blooming2477@gmail.com",
   "build": {
     "extends": null,

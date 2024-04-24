@@ -52,8 +52,10 @@ export const getSelfInfo = () => {
       const selfInfo: PartialUserItem = JSON.parse(res.data);
       let businessData = {};
       try {
-        const { data } = await getUserInfoByBusiness(selfInfo.userID);
-        businessData = data.userFullInfoList[0] ?? {};
+        const { data } = await im.getUsersInfo([selfInfo.userID]);
+        try {
+          businessData = JSON.parse(data)[0].friendInfo;
+        } catch (error) {}
       } catch (error) {}
       filterEmptyValue(businessData);
       const fullInfo = { ...selfInfo, ...businessData };
@@ -84,8 +86,8 @@ export const getAdminToken = (uid?: string, secret?: string) => {
 export const getAppGlobalConfig = () => {
   return (dispatch: Dispatch) => {
     getAppConfig().then(({ data }) => {
-      if(!data.robots){
-        data.robots = []
+      if (!data.robots) {
+        data.robots = [];
       }
       dispatch(setAppGlobalConfig(data));
     });

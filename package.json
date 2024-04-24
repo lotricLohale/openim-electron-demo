@@ -1,5 +1,5 @@
 {
-  "name": "OpenMetaOffice-Electron",
+  "name": "QieQie",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
@@ -132,7 +132,7 @@
   "main": "build/electron/main.js",
   "homepage": "./",
   "author": "blooming",
-  "description": "Open IM",
+  "description": "QieQie",
   "email": "blooming2477@gmail.com",
   "build": {
     "publish": [
@@ -168,6 +168,7 @@
       "maintainer": "QieQie"
     },
     "nsis": {
+      "deleteAppDataOnUninstall": true,
       "oneClick": false,
       "perMachine": true,
       "allowElevation": true,

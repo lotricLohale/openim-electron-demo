@@ -88,6 +88,7 @@ const GroupDrawer: FC<GroupDrawerProps> = ({ curCve, role, groupInfo, currentMem
   };
 
   const updateNick = () => {
+    console.log(123);
     im.setGroupMemberNickname({
       groupID: curCve.groupID,
       userID: selfID,
@@ -199,9 +200,7 @@ const GroupDrawer: FC<GroupDrawerProps> = ({ curCve, role, groupInfo, currentMem
         </div>
         <div className="group_drawer_item group_drawer_item_nbtm group_drawer_item_bottom">
           <div>{t("GroupType")}</div>
-          <Paragraph>
-            {t(groupInfo.groupType === GroupType.NomalGroup ? "NomalGroup" : "WorkGroup")}
-          </Paragraph>
+          <Paragraph>{t(groupInfo.groupType === GroupType.NomalGroup ? "NomalGroup" : "WorkGroup")}</Paragraph>
         </div>
         <div className="group_drawer_item group_drawer_item_nbtm">
           <div>{t("NickInGruop")}</div>
@@ -211,6 +210,9 @@ const GroupDrawer: FC<GroupDrawerProps> = ({ curCve, role, groupInfo, currentMem
               maxLength: 15,
               onChange: (v) => (nickDrft = v),
               onEnd: updateNick,
+            }}
+            onBlur={() => {
+              console.log("onBlur");
             }}
           >
             {selfMemberInfo?.nickname}

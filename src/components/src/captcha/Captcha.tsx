@@ -53,7 +53,6 @@ const Captcha: FC<CaptchaProps> = forwardRef((props, ref) => {
 
   const fail = () => {
     const c = count + 1;
-    console.log("fail", captchaType, count);
     if (c > 2 && captchaType === "auto") {
       setState({
         count: c,
@@ -81,7 +80,6 @@ const Captcha: FC<CaptchaProps> = forwardRef((props, ref) => {
         clientUid: localStorage.getItem(vr.name),
         ts: Date.now(),
       };
-      console.log("checkFuc", checkFuc?.current);
       (checkFuc?.current ?? check)(checkUrl ?? `${path}/captcha/check`, data)
         .then((res: any) => {
           const validate: boolean = res?.errCode === 0;

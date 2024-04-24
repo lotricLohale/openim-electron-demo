@@ -31,7 +31,7 @@ export const setTray = (mainWindow: BrowserWindow | null) => {
     {
       label: "退出",
       click: () => {
-        app.quit();
+        app.exit();
       },
     },
   ]);

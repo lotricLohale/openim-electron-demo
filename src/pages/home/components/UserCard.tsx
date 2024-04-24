@@ -139,8 +139,11 @@ const UserCard: FC<UserCardProps> = ({ visible, cardInfo, inGroup, cardType, clo
   const getCradData = async () => {
     switch (latestInternalType.current) {
       case CardType.FriendInfo:
-        const { data } = await getUserInfoByBusiness(cardInfo.friend!.userID);
-        const friendBusinessInfo = data.userFullInfoList[0] ?? {};
+        const { data } = await im.getUsersInfo([cardInfo.friend!.userID]);
+        let friendBusinessInfo = {};
+        try {
+          friendBusinessInfo = JSON.parse(data)[0].friendInfo;
+        } catch (error) {}
         filterEmptyValue(friendBusinessInfo);
         setCardData({
           userInfo: { ...cardInfo.friend, ...friendBusinessInfo } as UserCardItem,
