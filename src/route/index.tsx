@@ -695,7 +695,12 @@ const Auth = () => {
         invalid();
       });
   };
-
+  useEffect(() => {
+    !golbalLoading &&
+      setTimeout(() => {
+        window.electron?.focusHomePage();
+      }, 100);
+  }, [golbalLoading]);
   const getStore = (userID: string) => {
     dispatch(getSelfInfo());
     dispatch(getCveList());
@@ -712,7 +717,6 @@ const Auth = () => {
   };
 
   const invalid = () => {
-    setGolbalLoading(false);
     // message.warning("登录失效，请重新登录！");
     localStorage.removeItem(`improfile-${userID}`);
     localStorage.removeItem("IMuserID");
@@ -720,6 +724,7 @@ const Auth = () => {
     window.electron?.removeStoreKey("IMProfile");
     syncMessageFinishHandler();
     navigate("/login");
+    setGolbalLoading(false);
   };
 
   const deWeightThree = (cves: ConversationItem[]) => {

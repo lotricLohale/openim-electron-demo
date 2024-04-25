@@ -187,7 +187,6 @@ const RtcModal: FC<RtcModalProps> = ({ visible, isVideo, isSingle, isCalled, inv
 
   const acceptHandler = async () => isSingle && (await connectRtc(connConfig.current.url, connConfig.current.token));
   const rejectHandler = () => {
-    console.log("rejectHandler");
     if (isSingle) {
       insertMessage("beRejected");
       myClose();
@@ -277,7 +276,7 @@ const RtcModal: FC<RtcModalProps> = ({ visible, isVideo, isSingle, isCalled, inv
 
   const sendInvite = (config: RtcInvite) => {
     if (config.sessionType === SessionType.Single) {
-      return im.signalingInvite(config);
+      return im.signalingInvite({ ...config, OfflinePushInfo: { title: selfInfo.nickname, desc: `邀请你进行${config.mediaType === "audio" ? "语音" : "音视频"}通话` } });
     } else {
       return im.signalingInviteInGroup(config);
     }
@@ -343,7 +342,6 @@ const RtcModal: FC<RtcModalProps> = ({ visible, isVideo, isSingle, isCalled, inv
     clearTimer();
     signalingHungUp();
     setIsCalling(false);
-    console.log(room);
     romRef.current?.removeAllListeners();
     romRef.current?.disconnect(true);
     myClose();
@@ -382,7 +380,7 @@ const RtcModal: FC<RtcModalProps> = ({ visible, isVideo, isSingle, isCalled, inv
       description: "RTC",
     };
     const { data: message } = await im.createCustomMessage(config);
-    let sendData;
+    let sendData: any;
     if (isSingle) {
       sendData = {
         message,
@@ -396,7 +394,10 @@ const RtcModal: FC<RtcModalProps> = ({ visible, isVideo, isSingle, isCalled, inv
         sendID: invitation.inviterUserID,
       };
     }
-    console.log("sendData", sendData);
+    sendData.offlinePushInfo = {
+      title: selfInfo.nickname,
+      desc: `${switchCallStatus(status)}${status === "hangup" ? " " + timeStr : `${!isVideo ? "语音" : "音视频"}通话邀请`}`,
+    };
     const { data: newMessageStr } = await im.sendMessage(sendData, uuid("uuid"));
     const inCurSingle = curCve && isSingleCve(curCve) && (curCve.userID === invitation.inviterUserID || curCve.userID === invitation.inviteeUserIDList[0]);
     const inCurGroup = curCve && curCve.groupID === invitation.groupID;
@@ -450,7 +451,6 @@ const RtcModal: FC<RtcModalProps> = ({ visible, isVideo, isSingle, isCalled, inv
   };
 
   const switchAction = async (type: RtcActionTypes) => {
-    console.log("switchAction", type);
     switch (type) {
       case RtcActionTypes.Access:
         acceptRtc();

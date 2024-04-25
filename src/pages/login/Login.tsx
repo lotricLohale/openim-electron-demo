@@ -81,6 +81,7 @@ const Login = () => {
   const dataRef = React.useRef<{ [name: string]: any }>({});
   const CaptchaRef = React.useRef<any>();
   const checkFucRef = React.useRef<any>();
+  const reStartRef = React.useRef<Function>();
   const lastType = useLatest(type);
 
   const finish = async (values?: FormField | string | InfoField) => {
@@ -209,6 +210,7 @@ const Login = () => {
             const cData = await getSmsCode({ ...subData, captchaType: data.captchaType, token: data.token, pointJson: data.pointJson });
             if (cData.errCode !== 0) return;
             message.success(t("register.sendCodeSuccess"));
+            reStartRef.current?.();
             return cData;
           };
           CaptchaRef.current?.verify();
@@ -466,7 +468,7 @@ const Login = () => {
               <Input size="large" placeholder={t("register.codeLabel")} />
             </Form.Item>
             <Form.Item>
-              <Countdown initCountDown={true} onClick={() => finish("getCode")}>
+              <Countdown initCountDown={true} reStartRef={reStartRef} onClick={() => finish("getCode")}>
                 {t("register.sendCodeAgain")}
               </Countdown>
             </Form.Item>
@@ -690,7 +692,7 @@ const Login = () => {
                 <Input size="large" placeholder={t("register.codeLabel")} />
               </Form.Item>
               <Form.Item>
-                <Countdown initCountDown={true} onClick={() => finish("registerGetCode")}>
+                <Countdown initCountDown={true} reStartRef={reStartRef} onClick={() => finish("registerGetCode")}>
                   {t("register.sendCodeAgain")}
                 </Countdown>
               </Form.Item>
@@ -916,7 +918,7 @@ const Login = () => {
                 <Input size="large" placeholder={t("register.codeLabel")} />
               </Form.Item>
               <Form.Item>
-                <Countdown initCountDown={true} onClick={() => finish("getEmailCode")}>
+                <Countdown initCountDown={true} reStartRef={reStartRef} onClick={() => finish("getEmailCode")}>
                   {t("register.sendCodeAgain")}
                 </Countdown>
               </Form.Item>
@@ -983,6 +985,9 @@ const Login = () => {
   React.useEffect(() => {
     window.electron?.setLoginInit();
     navigate("/login", { replace: true });
+    setTimeout(() => {
+      window.electron?.focusHomePage();
+    }, 100);
   }, []);
   return (
     <div className="login-main">

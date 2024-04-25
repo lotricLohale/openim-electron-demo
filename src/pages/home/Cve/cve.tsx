@@ -601,7 +601,7 @@ const Home = () => {
       console.log("onHangup", parsedMsg, latestCve.current.groupID);
       const offlinePushInfo = {
         title: parsedMsg?.senderNickname || "你有一条新消息",
-        desc: `${parsedMsg.contentType}`,
+        desc: "你有一条新消息",
         ex: "",
         iOSPushSound: "+1",
         iOSBadgeCount: true,

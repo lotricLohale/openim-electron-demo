@@ -17,9 +17,13 @@ interface CountdownProps extends React.HTMLAttributes<HTMLDivElement> {
    * 倒计时，默认60
    */
   count?: number;
+  /**
+   * 实体对象
+   */
+  reStartRef?: any;
 }
 const Countdown: FC<CountdownProps> = (props) => {
-  const { count = 60, onClick, initCountDown, ...divProps } = props;
+  const { count = 60, onClick, initCountDown, reStartRef, ...divProps } = props;
   const [timeState, setTimeState] = React.useState(0);
   const timeRef = React.useRef<NodeJS.Timeout>();
   const countRef = React.useRef<number>(0);
@@ -40,6 +44,11 @@ const Countdown: FC<CountdownProps> = (props) => {
     }, 1000);
     if (e) onClick?.(e);
   };
+  const reStart = () => {
+    countRef.current = count;
+    setTimeState(countRef.current);
+  };
+  if (reStartRef) reStartRef.current = reStart;
   // 销毁时清空定时器
   React.useEffect(() => {
     // 是否初始开始倒计时

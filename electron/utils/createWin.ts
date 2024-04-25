@@ -31,12 +31,14 @@ async function createMainWindow() {
 
   mainWindow.on("ready-to-show", function () {
     try {
-      loadingWindow?.hide();
-      loadingWindow?.destroy();
+      setTimeout(() => {
+        loadingWindow?.hide();
+        loadingWindow?.destroy();
+      }, 10000);
     } catch (error) {
       console.log(error);
     }
-    mainWindow?.show();
+    // mainWindow?.show();
   });
   mainWindow.on("closed", () => {
     mainWindow = null;
@@ -64,7 +66,7 @@ async function createMainWindow() {
     });
   }
 
-  setIpcMain(mainWindow);
+  setIpcMain(mainWindow, loadingWindow);
   setTray(mainWindow);
   setSingleInstance(mainWindow);
   //  Download

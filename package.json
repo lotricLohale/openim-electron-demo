@@ -131,9 +131,9 @@
   },
   "main": "build/electron/main.js",
   "homepage": "./",
-  "author": "blooming",
+  "author": "",
   "description": "QieQie",
-  "email": "blooming2477@gmail.com",
+  "email": "",
   "build": {
     "publish": [
       {

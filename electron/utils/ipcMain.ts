@@ -5,8 +5,12 @@ import { screenshot } from "./srcShot";
 import { cachePath } from "./cache";
 const packageJson = require("../../../package.json");
 
-export const setIpcMain = (mainWindow: BrowserWindow | null) => {
+export const setIpcMain = (mainWindow: BrowserWindow | null, loadingWindow: BrowserWindow | null) => {
   ipcMain.on("FocusHomePage", (e) => {
+    try {
+      loadingWindow?.hide();
+      loadingWindow?.destroy();
+    } catch (error) {}
     mainWindow?.show();
   });
 
