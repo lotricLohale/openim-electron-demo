@@ -18,6 +18,7 @@ import { GroupRole, MessageItem, MessageType } from "../../../../../utils/open_i
 import { isFileDownloaded } from "../../../../../utils/im";
 import { shallowEqual, useSelector } from "react-redux";
 import { RootState } from "../../../../../store";
+import { customType } from "../../../../../constants/messageContentType";
 
 const canCpTypes = [MessageType.TEXTMESSAGE, MessageType.ATTEXTMESSAGE, MessageType.QUOTEMESSAGE];
 const canDownloadTypes = [MessageType.PICTUREMESSAGE, MessageType.VIDEOMESSAGE, MessageType.FILEMESSAGE];
@@ -236,6 +237,17 @@ const MsgMenu: FC<MsgMenuProps> = ({ visible, msg, isSelf, visibleChange, childr
 
       if (menu.title === t("AddMsg") && !canAddTypes.includes(msg.contentType)) {
         menu.hidden = true;
+      }
+      if (menu.title === t("Forward")) {
+        if (msg.contentType === MessageType.CUSTOMMESSAGE && msg?.customElem?.data) {
+          let customData;
+          try {
+            customData = JSON.parse(msg.customElem.data);
+          } catch {}
+          if (customData?.customType === customType.emoji) {
+            menu.hidden = true;
+          }
+        }
       }
     }
 

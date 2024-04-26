@@ -319,6 +319,8 @@ const SwitchMsgType: FC<SwitchMsgTypeProps> = (props) => {
         );
       case customType.TextMsg:
         return null;
+      case customType.emoji:
+        return <img style={{ width: "160px", marginTop: "24px", marginLeft: "-32px" }} src={cMsg?.data} alt="emoji" />;
       case customType.Call:
         console.log("call", cMsg);
         return (
@@ -468,9 +470,9 @@ const SwitchMsgType: FC<SwitchMsgTypeProps> = (props) => {
       case MessageType.CUSTOMMESSAGE:
         const customEl = msg.customElem;
         try {
-          const customData = JSON.parse(customEl.data);
+          let customData = JSON.parse(customEl.data);
           if (customData.customType === customType.TextMsg) {
-            console.log(customData.data);
+            if (typeof customData?.data === "string") customData.data = JSON.parse(customData.data);
             return (
               <div className="forward-view">
                 <span className="forward-view-form">{customData?.data?.senderNickname ? t("ForwardedMessageFrom", { user: customData.data.senderNickname }) : ""}</span>
@@ -498,7 +500,7 @@ const SwitchMsgType: FC<SwitchMsgTypeProps> = (props) => {
       default:
         return <div className={`chat_bg_msg_content_text nick_magin`}>{t("UnsupportedMessage")}</div>;
     }
-  }, [msg.status, msg.progress, msg.content, msg.downloadProgress, msg.pictureElem.sourcePicture.url, needMargin, blackList]);
+  }, [msg.status, msg.progress, msg.content, msg.downloadProgress, msg.pictureElem?.sourcePicture?.url, needMargin, blackList]);
 
   return MsgType;
 };

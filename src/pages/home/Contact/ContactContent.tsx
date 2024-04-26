@@ -1,5 +1,5 @@
 import { useUpdateEffect } from "ahooks";
-import { FC,memo, useEffect ,useState } from "react";
+import { FC, memo, useEffect, useState } from "react";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { CommonContacts } from "../../../@types/open_im";
@@ -79,7 +79,7 @@ const ContactContent: FC<ContactContentProps> = ({ menu }) => {
   };
 
   const checkStore = async (renderList: any[]) => {
-    await updateReadedApplications(renderList.filter(item=>item.handleResult ===0))
+    await updateReadedApplications(renderList.filter((item) => item.handleResult === 0));
     events.emit(APPLICATION_ACCESS_UPDATE);
   };
 
@@ -90,7 +90,10 @@ const ContactContent: FC<ContactContentProps> = ({ menu }) => {
         let tmpList;
         if (!searchFlag) {
           if (menu.idx === 1 && renderType === "recv") {
-            tmpList = recvFriendApplicationList;
+            let tObj: { [name: string]: boolean } = {};
+            tmpList = recvFriendApplicationList?.filter((item) => {
+              return tObj[item.fromUserID] ? false : (tObj[item.fromUserID] = true);
+            });
           } else if (menu.idx === 1 && renderType === "sent") {
             tmpList = sentFriendApplicationList;
           } else if (menu.idx === 2 && renderType === "recv") {
@@ -99,9 +102,9 @@ const ContactContent: FC<ContactContentProps> = ({ menu }) => {
             tmpList = sentGroupApplicationList;
           }
         }
-        console.log(menu.idx);
-
-        tmpList?.sort((a, b) => (a.handleResult === 0 ? -1 : 1));
+        tmpList?.sort((a, b) => {
+          return a.handleResult === 0 ? -1 : 1;
+        });
         checkStore(tmpList ?? []);
         return <NewNotice type={menu.idx} renderType={renderType} renderList={tmpList} />;
       case 0:

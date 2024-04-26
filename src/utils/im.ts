@@ -29,6 +29,8 @@ const switchCustomMsg = (cMsg: any, isSelfMsg: boolean) => {
       return "[语音通话]";
     case customType.MeetingInvitation:
       return "[会议邀请]";
+    case customType.emoji:
+      return "[表情消息]";
     default:
       return "";
   }

@@ -235,8 +235,9 @@ const ChatContent: FC<ChatContentProps> = (props) => {
   return (
     <div style={{ padding: isMerge ? "24px" : "0" }} className="chat_bg">
       <ScrollView tip={null} reverse={!isNotify(curCve!.conversationType)} holdHeight={30} loading={loading} data={msgList} fetchMoreData={nextFuc} hasMore={hasMore}>
-        {msgList?.map((msg) =>
-          TipsType.includes(msg.contentType) && notGroupNotice(msg) ? (
+        {msgList?.map((msg) => {
+          console.log("msgList", msg);
+          return TipsType.includes(msg.contentType) && notGroupNotice(msg) ? (
             <div key={msg.clientMsgID} className="chat_bg_tips">
               <MemoParse msg={msg} isSelf={isSelf} curCve={curCve!} />
             </div>
@@ -252,8 +253,8 @@ const ChatContent: FC<ChatContentProps> = (props) => {
               selfID={merID ?? selfID}
               curCve={curCve!}
             />
-          )
-        )}
+          );
+        })}
       </ScrollView>
       <audio ref={audioRef} />
       {curCve?.groupAtType === GroupAtType.AtGroupNotice && <NoticeCard conversationID={curCve.conversationID} />}

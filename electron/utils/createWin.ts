@@ -30,14 +30,14 @@ async function createMainWindow() {
   });
 
   mainWindow.on("ready-to-show", function () {
-    try {
-      setTimeout(() => {
+    setTimeout(() => {
+      try {
         loadingWindow?.hide();
         loadingWindow?.destroy();
-      }, 10000);
-    } catch (error) {
-      console.log(error);
-    }
+      } catch (error) {
+        console.log(error);
+      }
+    }, 10000);
     // mainWindow?.show();
   });
   mainWindow.on("closed", () => {

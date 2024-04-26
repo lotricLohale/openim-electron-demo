@@ -4,6 +4,7 @@ import googleImg from "@/assets/images/login/google.png";
 import twoCheckImg from "@/assets/images/login/twoCheck.png";
 import appImg from "@/assets/images/login/app.png";
 import qrCodeImg from "@/assets/images/login/qrcode.png";
+import portal_top from "@/assets/images/login/portal_top.png";
 import successImg from "@/assets/images/login/set_success.png";
 import { FormField, InfoField } from "./components/LoginForm";
 import { FC, useState } from "react";
@@ -14,7 +15,7 @@ import { Trans, useTranslation } from "react-i18next";
 import md5 from "md5";
 import { getSmsCode, login, phoneLoginCheck, register, reset, sendEmailCode, sendSms, UsedFor, verifyCode, verifyEmailCode } from "../../api/login";
 import { im, switchLoginError } from "../../utils";
-import { getIMApiUrl, getIMWsUrl } from "../../config";
+import { REGISTER_URL, getIMApiUrl, getIMWsUrl } from "../../config";
 import { useDispatch } from "react-redux";
 import { getSelfInfo, resetUserStore } from "../../store/actions/user";
 import { getCveList, resetCveStore } from "../../store/actions/cve";
@@ -42,6 +43,7 @@ import FormItemText from "./components/formItemText";
 import { ResponseData } from "../../types/common";
 import LoginBg from "./loginBg";
 import { Captcha } from "../../components/src/index";
+import ReactCodeInput from "react-code-input";
 
 import "./index.scss";
 
@@ -85,7 +87,6 @@ const Login = () => {
   const lastType = useLatest(type);
 
   const finish = async (values?: FormField | string | InfoField) => {
-    console.log(lastType.current, values);
     const lType = typeof values === "string" ? values : lastType.current;
     switch (lType) {
       case "checkLogin":
@@ -256,7 +257,6 @@ const Login = () => {
         window.electron.setLoginMain();
       })
       .catch((err) => {
-        console.log(err);
         handleError(err);
       });
   };
@@ -294,6 +294,7 @@ const Login = () => {
     const [form] = Form.useForm();
     const { loading, apiLoading } = useApiLoading();
     const [loginType, setLoginType] = useState("phone");
+    const [showProtocol, setShowProtocol] = useState(false);
     return (
       <>
         <TypeSwitch onChange={(val) => setLoginType(val)} />
@@ -339,13 +340,18 @@ const Login = () => {
               rules={[
                 {
                   validator: (_, value) => {
-                    console.log(_, value);
                     return value ? Promise.resolve() : Promise.reject(new Error(t("login.protocolCheck") as string));
                   },
                 },
               ]}
             >
-              <Checkbox className="rtc-check-protocol">
+              <Checkbox
+                onClick={(e) => {
+                  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                  (e.target as any)?.checked && setShowProtocol(true);
+                }}
+                className="rtc-check-protocol"
+              >
                 <Trans
                   t={t}
                   i18nKey="login.protocolTips"
@@ -394,6 +400,62 @@ const Login = () => {
           <p>{t("login.qrCodeLoginTips")}</p>
           <img src={qrCodeImg} alt="qrCode" />
         </div>
+        <div className={`login-protocol-model login-protocol-model-${showProtocol}`}>
+          <div className="protocol-model-content">
+            <img src={portal_top} alt="" />
+            <div className="protocol-model-content-title">{t("login.protocolTitle")}</div>
+            <div className="protocol-model-content-context">
+              <Trans
+                t={t}
+                i18nKey="login.protocolTipsInfo"
+                components={{
+                  service: (
+                    <span
+                      className="protocol-click"
+                      onClick={(e) => {
+                        window.electron.openExternal("https://www.qieqieapp.com/tos-cn.html");
+                        e.preventDefault();
+                      }}
+                    ></span>
+                  ),
+                  privacy: (
+                    <span
+                      className="protocol-click"
+                      onClick={(e) => {
+                        window.electron.openExternal("https://www.qieqieapp.com/privacy-cn.html");
+                        e.preventDefault();
+                      }}
+                    ></span>
+                  ),
+                }}
+              />
+            </div>
+            <Button
+              size="large"
+              className="rtc-form-btn"
+              onClick={() => {
+                setShowProtocol(false);
+                form.setFieldsValue({ protocol: true });
+              }}
+              block
+              style={{ marginBottom: "16px" }}
+            >
+              {t("login.agree")}
+            </Button>
+            <Button
+              size="large"
+              onClick={() => {
+                setShowProtocol(false);
+                form.setFieldsValue({ protocol: false });
+                form.validateFields();
+              }}
+              className="rtc-form-btn rtc-form-btn-default"
+              block
+            >
+              {t("login.reject")}
+            </Button>
+          </div>
+        </div>
       </>
     );
   };
@@ -430,7 +492,6 @@ const Login = () => {
     const [form] = Form.useForm();
     const { loading, apiLoading } = useApiLoading();
     const codeFinish = async (values: ResponseData) => {
-      console.log("in");
       const { code } = form.getFieldsValue();
       const checkAreaCode = `+${dataRef.current.phoneData.country.dialCode}`;
       const subData = {
@@ -458,14 +519,14 @@ const Login = () => {
             <Form.Item
               name="code"
               required={false}
-              label={t("register.code")}
+              label={t("register.codeLabel")}
               rules={[
                 {
                   required: true,
                 },
               ]}
             >
-              <Input size="large" placeholder={t("register.codeLabel")} />
+              <ReactCodeInput className="qieqie_code_input" type="number" name={"code"} fields={6} inputMode={"numeric"} />
             </Form.Item>
             <Form.Item>
               <Countdown initCountDown={true} reStartRef={reStartRef} onClick={() => finish("getCode")}>
@@ -511,7 +572,6 @@ const Login = () => {
           };
           localStorage.setItem(`IMaccount`, dataRef.current.phoneNumber.split(pwdAreaCode)[1]);
           const resData: ResponseData = await login(params);
-          console.log(123456);
           imLogin(resData.data.userID, resData.data.imToken);
           localStorage.setItem(`accountProfile-${resData.data.userID}`, resData.data.chatToken);
           break;
@@ -656,9 +716,17 @@ const Login = () => {
       dataRef.current = { ...subData, ...dataRef.current };
       navigate("/login/register/twoStep", { replace: true });
     };
+    const stepTitle = React.useMemo(() => {
+      const pathTitle: { [name: string]: string } = {
+        "/login/register": t("register.register"),
+        "/login/register/twoStep": t("register.registerTwo"),
+        "/login/register/threeStep": t("register.registerThree"),
+        "/login/register/setEmailStep": t("register.registerThree1"),
+      };
+      return pathTitle[location.pathname] || t("register.register");
+    }, [location.pathname]);
     lastType.current = "register";
     React.useEffect(() => {
-      console.log(location.pathname);
       switch (location.pathname) {
         case "/login/register/twoStep":
           setStepPercent(66);
@@ -682,14 +750,14 @@ const Login = () => {
               <Form.Item
                 name="code"
                 required={false}
-                label={t("register.code")}
+                label={t("register.codeLabel")}
                 rules={[
                   {
                     required: true,
                   },
                 ]}
               >
-                <Input size="large" placeholder={t("register.codeLabel")} />
+                <ReactCodeInput className="qieqie_code_input" type="number" name={"code"} fields={6} inputMode={"numeric"} />
               </Form.Item>
               <Form.Item>
                 <Countdown initCountDown={true} reStartRef={reStartRef} onClick={() => finish("registerGetCode")}>
@@ -720,104 +788,115 @@ const Login = () => {
     const TwoStep = () => {
       const [form] = Form.useForm();
       return (
-        <div className="rtc-diy-form rtc-register-form">
-          <Form
-            form={form}
-            layout="vertical"
-            onFinish={() => {
-              const { password, userName, question } = form.getFieldsValue();
-              dataRef.current = { ...dataRef.current, password, nickname: userName, tip: question || "" };
-              navigate("/login/register/threeStep", { replace: true });
-            }}
-            autoComplete="off"
-            className="rtc-diy-form relative mt-[42px] h-[409px]"
-          >
-            <Form.Item
-              name="password"
-              required={false}
-              className="mb-[12px]"
-              rules={[
-                {
-                  required: true,
-                  message: t("register.passwordLabel") as string,
-                },
-                {
-                  min: 6,
-                  message: t("register.passwordRule") as string,
-                },
-                {
-                  max: 20,
-                  message: t("register.passwordRule") as string,
-                },
-              ]}
-            >
-              <Input.Password placeholder={t("register.passwordLabel") as string} />
-            </Form.Item>
-            <Form.Item
-              name="passwordAgain"
-              dependencies={["password"]}
-              required={false}
-              rules={[
-                {
-                  required: true,
-                  message: t("register.passwordAgainLabel") as string,
-                },
-                {
-                  validator: (_, value) => {
-                    const { password } = form.getFieldsValue();
-                    if (!value || password === value) {
-                      return Promise.resolve();
-                    }
-                    if (value.length < 6 || value.length > 20) {
-                      return Promise.reject(new Error(t("register.passwordRule") as string));
-                    }
-                    return Promise.reject(new Error(t("register.passwordNotMatch") as string));
-                  },
-                },
-              ]}
-            >
-              <Input.Password placeholder={t("register.passwordAgainLabel") as string} />
-            </Form.Item>
-            <Form.Item>
-              <FormItemText>{t("register.passwordRule")}</FormItemText>
-            </Form.Item>
-            <Form.Item
-              name="userName"
-              required={false}
-              rules={[
-                {
-                  required: true,
-                  message: t("register.userNameLabel") as string,
-                },
-              ]}
-            >
-              <Input placeholder={t("register.userNameLabel") as string} />
-            </Form.Item>
-            <Form.Item name="question" required={false} className="mb-[12px]">
-              <Input placeholder={t("register.passwordTips") as string} />
-            </Form.Item>
-            <Form.Item style={{ marginTop: "80px" }} shouldUpdate>
-              {() => {
-                return (
-                  <Button
-                    size="large"
-                    className="rtc-form-btn"
-                    htmlType="submit"
-                    block
-                    disabled={
-                      !form.isFieldTouched("password") ||
-                      !form.isFieldTouched("passwordAgain") ||
-                      !form.isFieldTouched("userName") ||
-                      !!form.getFieldsError().filter(({ errors }) => errors.length).length
-                    }
-                  >
-                    {t("register.next")}
-                  </Button>
-                );
+        <>
+          <div style={{ marginTop: "24px" }} className="login-login-value">
+            {t("register.passwordLoginTips")}QieQie
+          </div>
+          <div className="rtc-diy-form rtc-register-form">
+            <Form
+              form={form}
+              layout="vertical"
+              onFinish={() => {
+                const { password, userName, question } = form.getFieldsValue();
+                dataRef.current = { ...dataRef.current, password, nickname: userName, tip: question || "" };
+                navigate("/login/register/threeStep", { replace: true });
               }}
-            </Form.Item>
-          </Form>
-        </div>
+              autoComplete="off"
+              className="rtc-diy-form relative"
+            >
+              <Form.Item
+                name="userName"
+                style={{ marginBottom: "24px" }}
+                required={false}
+                label={t("register.userName")}
+                rules={[
+                  {
+                    required: true,
+                    message: t("register.userNameLabel") as string,
+                  },
+                  {
+                    max: 20,
+                    message: t("register.userNameRule") as string,
+                  },
+                ]}
+              >
+                <Input placeholder={t("register.userNameRule") as string} />
+              </Form.Item>
+              <Form.Item
+                name="password"
+                required={false}
+                className="mb-[12px]"
+                label={t("register.password")}
+                tooltip={t("register.passwordRuleTips")}
+                rules={[
+                  {
+                    required: true,
+                    message: t("register.passwordLabel") as string,
+                  },
+                  {
+                    min: 6,
+                    message: t("register.passwordRule") as string,
+                  },
+                  {
+                    max: 20,
+                    message: t("register.passwordRule") as string,
+                  },
+                ]}
+              >
+                <Input.Password placeholder={t("register.passwordLabel") as string} />
+              </Form.Item>
+              <Form.Item
+                style={{ marginBottom: "24px" }}
+                name="passwordAgain"
+                dependencies={["password"]}
+                required={false}
+                rules={[
+                  {
+                    required: true,
+                    message: t("register.passwordAgainLabel") as string,
+                  },
+                  {
+                    validator: (_, value) => {
+                      const { password } = form.getFieldsValue();
+                      if (!value || password === value) {
+                        return Promise.resolve();
+                      }
+                      if (value.length < 6 || value.length > 20) {
+                        return Promise.reject(new Error(t("register.passwordRule") as string));
+                      }
+                      return Promise.reject(new Error(t("register.passwordNotMatch") as string));
+                    },
+                  },
+                ]}
+              >
+                <Input.Password placeholder={t("register.passwordAgainLabel") as string} />
+              </Form.Item>
+              <Form.Item label={t("register.passwordTipsLabel")} name="question" required={false}>
+                <Input placeholder={t("register.passwordTips") as string} />
+              </Form.Item>
+              <Form.Item style={{ marginTop: "80px" }} shouldUpdate>
+                {() => {
+                  return (
+                    <Button
+                      size="large"
+                      className="rtc-form-btn"
+                      htmlType="submit"
+                      block
+                      disabled={
+                        !form.isFieldTouched("password") ||
+                        !form.isFieldTouched("passwordAgain") ||
+                        !form.isFieldTouched("userName") ||
+                        !!form.getFieldsError().filter(({ errors }) => errors.length).length
+                      }
+                    >
+                      {t("register.next")}
+                    </Button>
+                  );
+                }}
+              </Form.Item>
+            </Form>
+          </div>
+        </>
       );
     };
     const ThreeStep = () => {
@@ -908,14 +987,14 @@ const Login = () => {
               <Form.Item
                 name="code"
                 required={false}
-                label={t("register.code")}
+                label={t("register.codeLabel")}
                 rules={[
                   {
                     required: true,
                   },
                 ]}
               >
-                <Input size="large" placeholder={t("register.codeLabel")} />
+                <ReactCodeInput className="qieqie_code_input" type="number" name={"code"} fields={6} inputMode={"numeric"} />
               </Form.Item>
               <Form.Item>
                 <Countdown initCountDown={true} reStartRef={reStartRef} onClick={() => finish("getEmailCode")}>
@@ -968,7 +1047,10 @@ const Login = () => {
       <div className="login-login login-main-div">
         {location.pathname !== "/login/register/final" && (
           <>
-            <div className="login-login-title">{t("register.register")}</div>
+            <div className="login-login-title">
+              {location.pathname === "/login/register/twoStep" && <div className="account-info-tips">{t("register.userInfoTips")}</div>}
+              {stepTitle}
+            </div>
             <Progress type="line" size="small" percent={stepPercent} width={274} style={{ height: "3px" }} strokeColor="#0E1013" trailColor="#F3F4F5" showInfo={false} />
           </>
         )}
@@ -994,9 +1076,9 @@ const Login = () => {
       <WindowControlBar />
       <Captcha
         checkFuc={checkFucRef}
-        getUrl="http://im.633588.com/chat/account/get_block_puzzle"
+        getUrl={`${REGISTER_URL}/account/get_block_puzzle`}
         onSuccess={(data) => console.log(data)}
-        checkUrl="https://im.633588.com/chat/account/get_block_puzzle"
+        checkUrl={`${REGISTER_URL}/account/get_block_puzzle`}
         type="auto"
         ref={CaptchaRef}
       ></Captcha>

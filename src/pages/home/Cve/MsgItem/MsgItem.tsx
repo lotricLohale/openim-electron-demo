@@ -267,18 +267,17 @@ const MsgItem: FC<MsgItemProps> = (props) => {
     }
     return null;
   };
-
   useEffect(() => {
     if (msg.contentType === MessageType.CUSTOMMESSAGE && msg?.customElem?.data) {
       let customData;
       try {
         customData = JSON.parse(msg.customElem.data);
-      } catch {
-        console.log("123123", msg);
-      }
+      } catch {}
       if (customData?.customType === customType.TextMsg) {
-        customData.data._pData = msg;
-        setMenuData(customData.data);
+        try {
+          customData.data._pData = msg;
+          setMenuData(customData.data);
+        } catch (error) {}
       }
     }
   }, [msg]);

@@ -60,6 +60,7 @@ export enum customType {
   TextMsg = 914,
   MeetingInvitation = 905,
   InsertLoading = 999,
+  emoji = 902,
 }
 
 export const nomalMessageTypes = [
