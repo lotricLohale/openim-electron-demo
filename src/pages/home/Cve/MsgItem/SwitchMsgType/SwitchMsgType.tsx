@@ -12,7 +12,7 @@ import {
   SHOW_PLAYER_MODAL,
   SIGNAL_INGINVITE,
 } from "../../../../../constants/events";
-import { faceMap } from "../../../../../constants/faceType";
+import { newFaceMap as faceMap } from "../../../../../constants/faceType";
 import { customType } from "../../../../../constants/messageContentType";
 import { RootState } from "../../../../../store";
 import { switchFileIcon, bytesToSize, events, parseTime, diffMemo, sec2Format } from "../../../../../utils";
@@ -59,6 +59,8 @@ const showInModal = (position: LngLat) => {
 const parseEmojiFace = (mstr: string) => {
   faceMap.map((f) => {
     const idx = mstr.indexOf(f.context);
+    debugger
+    console.log('mstr', mstr, faceMap);
     if (idx > -1) {
       mstr = mstr.replaceAll(f.context, `<img style="padding-right:2px" width="24px" src=${f.src} />`);
     }

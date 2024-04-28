@@ -5,7 +5,7 @@ import { UploadRequestOption } from "rc-upload/lib/interface";
 import { base64toFile, events, fileToBase64, getPicInfo, getVideoInfo, im, switchUpload } from "../../../../utils";
 import Upload, { RcFile } from "antd/lib/upload";
 import { PICMESSAGETHUMOPTION } from "../../../../config";
-import { faceMap } from "../../../../constants/faceType";
+import { newFaceMap as faceMap } from "../../../../constants/faceType";
 import send_id_card from "@/assets/images/send_id_card.png";
 import send_pic from "@/assets/images/send_pic.png";
 import send_video from "@/assets/images/send_video.png";

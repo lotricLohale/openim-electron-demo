@@ -8,12 +8,13 @@ import {
   CUR_GROUPMEMBER_CHANGED,
   Edit_MSG,
   FORWARD_AND_MER_MSG,
+  INSERT_TO_CURCVE,
   IS_SET_DRAFT,
   MUTIL_MSG,
   MUTIL_MSG_CHANGE,
   REPLAY_MSG,
 } from "../../../../constants/events";
-import { faceMap } from "../../../../constants/faceType";
+import { codeWithImg, faceMap, imgWithCode } from "../../../../constants/faceType";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import { RootState } from "../../../../store";
 import { useTranslation } from "react-i18next";
@@ -27,9 +28,10 @@ import { t } from "i18next";
 import CardMsgModal from "../../components/Modal/CardMsgModal";
 import MyAvatar from "../../../../components/MyAvatar";
 import MsgTypeBar from "./MsgTypeBar";
-import { GroupTypes, TipsType } from "../../../../constants/messageContentType";
+import { GroupTypes, TipsType, customType } from "../../../../constants/messageContentType";
 import { throttle } from "throttle-debounce";
 import { getCurrentMember, getGroupMemberList, setCurrentMember } from "../../../../store/actions/contacts";
+import { uuid } from "../../../../utils/open_im_sdk";
 
 const { Footer } = Layout;
 
@@ -386,7 +388,9 @@ const CveFooter: FC<CveFooterProps> = ({ sendMsg, curCve }) => {
     }
     switch (type) {
       case "text":
-        sendTextMsg(text);
+        if (Boolean(codeWithImg[text])) {
+          sendEmoji(text);
+        } else sendTextMsg(text);
         break;
       case "at":
         sendAtTextMsg(parseAt(text));
@@ -478,7 +482,35 @@ const CveFooter: FC<CveFooterProps> = ({ sendMsg, curCve }) => {
         sendFlag.current = false;
       });
   };
-
+  const sendEmoji = async (text: string) => {
+    const data = {
+      customType: customType.emoji,
+      data: `https://emoji.633588.com/${codeWithImg[text]}.gif`,
+    };
+    const config = {
+      data: JSON.stringify(data),
+      extension: "",
+      description: "emoji",
+    };
+    const { data: message } = await im.createCustomMessage(config);
+    let sendData: any;
+      sendData = {
+        message,
+        recvID: curCve.userID,
+        groupID: curCve.groupID
+      };
+    sendData.offlinePushInfo = {
+      title: curCve.showName,
+      desc: "[表情消息]",
+    };
+    const { data: newMessageStr } = await im.sendMessage(sendData, uuid("uuid"));
+    if (newMessageStr) {
+      events.emit(INSERT_TO_CURCVE, JSON.parse(newMessageStr));
+      reSet();
+    } else {
+      sendFlag.current = false;
+    }
+  };
   const sendAtTextMsg = async (text: string) => {
     const options = {
       text,

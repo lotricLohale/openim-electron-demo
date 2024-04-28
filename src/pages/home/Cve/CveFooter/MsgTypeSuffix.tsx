@@ -282,11 +282,6 @@ const MsgTypeSuffix: FC<MsgTypeSuffixProps> = ({ disabled, choseCard, faceClick,
     <div style={{ boxShadow: "0px 4px 25px rgb(0 0 0 / 16%)" }} className="face_container">
       {expressionStyle === 1 ? (
         <div className="face_container_emoji">
-          {faceMap.map((face) => (
-            <div key={face.context} onClick={() => faceClick(face, "emoji")} className="face_item">
-              <AntdImage preview={false} width={24} src={face.src} />
-            </div>
-          ))}
         </div>
       ) : (
         <div className="face_container_emoji">
