@@ -36,7 +36,7 @@ const Captcha: FC<CaptchaProps> = forwardRef((props, ref) => {
     });
     console.log(repData);
     const msg = "请刷新页面再试";
-    if (repData.errCode === 0) {
+    if (repData?.errCode === 0) {
       setError("");
       setCaptcha(vr.data(repData.data));
     } else {

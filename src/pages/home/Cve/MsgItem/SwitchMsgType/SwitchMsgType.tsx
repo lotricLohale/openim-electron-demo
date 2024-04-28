@@ -59,8 +59,6 @@ const showInModal = (position: LngLat) => {
 const parseEmojiFace = (mstr: string) => {
   faceMap.map((f) => {
     const idx = mstr.indexOf(f.context);
-    debugger
-    console.log('mstr', mstr, faceMap);
     if (idx > -1) {
       mstr = mstr.replaceAll(f.context, `<img style="padding-right:2px" width="24px" src=${f.src} />`);
     }
