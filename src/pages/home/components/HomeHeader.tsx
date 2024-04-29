@@ -21,6 +21,9 @@ import cve_tr_history from "@/assets/images/cve_tr_history.png";
 import cve_tr_notify from "@/assets/images/cve_tr_notify.png";
 import CveRightDrawer from "../Cve/CveRightDrawer/CveRightDrawer";
 import { GroupTypes } from "../../../constants/messageContentType";
+import { clearTimeout } from "timers";
+import { Timeout } from "ahooks/lib/useRequest/src/types";
+import React from "react";
 
 const { Header } = Layout;
 
@@ -42,7 +45,7 @@ const HomeHeader: FC<HeaderProps> = ({ isShowBt, type, title, curCve, typing }) 
     useUpdateEffect(() => {
       events.emit(APPLICATION_TYPE_UPDATE, origin);
     }, [origin]);
-
+    
     let recvLable,
       sentLable = "";
     const selectAble = title === t("NewFriend") || title === t("NewGroups");
@@ -128,6 +131,7 @@ const ChatHeader: FC<ChatHeaderProps> = ({ curCve, typing }) => {
   const groupList = useSelector((state: RootState) => state.contacts.groupList, shallowEqual);
   const robots = useSelector((state: RootState) => state.user.appConfig.robots, shallowEqual) || [];
   const lastCve = useRef<ConversationItem | undefined>(undefined);
+  const updateStatusTimeRef = React.useRef<Timeout>()
   const [drawerType, setDrawerType] = useState({
     type: CveDrawerType.Null,
     visible: false,
@@ -140,6 +144,10 @@ const ChatHeader: FC<ChatHeaderProps> = ({ curCve, typing }) => {
     lastCve.current = curCve;
     updateOnline(curCve!.userID);
     events.on(CHECK_USER_ONLINE, onlineUpdateHandler);
+    updateStatusTimeRef.current && clearTimeout(updateStatusTimeRef.current);
+    updateStatusTimeRef.current = setInterval(() => {
+      updateOnline(curCve.userID);
+    }, 5000)
     return () => {
       events.off(CHECK_USER_ONLINE, onlineUpdateHandler);
     };

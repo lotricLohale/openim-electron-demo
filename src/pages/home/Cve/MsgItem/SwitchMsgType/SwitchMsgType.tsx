@@ -320,7 +320,9 @@ const SwitchMsgType: FC<SwitchMsgTypeProps> = (props) => {
       case customType.TextMsg:
         return null;
       case customType.emoji:
-        return <img style={{ width: "160px", marginTop: "24px", marginLeft: "-32px" }} src={cMsg?.data} alt="emoji" />;
+        return <div  style={{ width: "95px", overflow: "hidden"}}>
+          <img style={{ width: "160px", marginTop: "24px", marginLeft: "-32px" }} src={cMsg?.data} alt="emoji" />
+        </div>;
       case customType.Call:
         console.log("call", cMsg);
         return (

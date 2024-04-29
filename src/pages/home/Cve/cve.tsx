@@ -312,6 +312,7 @@ const Home = () => {
   };
 
   const handleNewMsg = async (newServerMsg: MessageItem) => {
+    console.log('handleNewMsg', handleNewMsg);
     if (!isEmptyCve) {
       if (inCurCve(newServerMsg)) {
         events.emit(CHECK_USER_ONLINE);
