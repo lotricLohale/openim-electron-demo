@@ -23,6 +23,7 @@ import { useTranslation } from "react-i18next";
 import { FullUserItem } from "../utils/open_im_sdk/types";
 import { getApplicationIsReaded } from "../utils/im";
 import { APPLICATION_ACCESS_UPDATE } from "../constants/events";
+import DefaultModal from "../pages/home/components/defaultModal";
 
 const { Sider } = Layout;
 
@@ -103,6 +104,7 @@ const ToolsBar: FC<ToolsBarProps> = ({ userInfo }) => {
   const navigate = useNavigate();
   const popRef = useRef<HTMLDivElement>(null);
   const avaRef = useRef<HTMLDivElement>(null);
+  const [showAccountModal, setShowAccountModal] = useState<number>();
   const { t } = useTranslation();
 
   useClickAway(() => {
@@ -136,7 +138,8 @@ const ToolsBar: FC<ToolsBarProps> = ({ userInfo }) => {
           onOk: logout,
         });
         break;
-      default:
+      case 4:
+        setShowAccountModal(Math.random());
         break;
     }
   };
@@ -189,10 +192,10 @@ const ToolsBar: FC<ToolsBarProps> = ({ userInfo }) => {
       title: t("AccountSettings"),
       idx: 1,
     },
-    // {
-    //   title: t("AboutUs"),
-    //   idx: 2,
-    // },
+    {
+      title: t("AccountManage"),
+      idx: 4,
+    },
     {
       title: t("LogOut"),
       idx: 3,
@@ -233,6 +236,7 @@ const ToolsBar: FC<ToolsBarProps> = ({ userInfo }) => {
           <ToolIcon tool={t} key={idx} />
         ))}
       </div>
+      <DefaultModal render={showAccountModal} userInfo={userInfo} />
       {/* {draggableCardVisible && <UserCard close={closeDragCard} info={userInfo} type="self" draggableCardVisible={draggableCardVisible} />} */}
       {/* {<UserCard close={closeDragCard} info={userInfo} type="self" draggableCardVisible={draggableCardVisible} />} */}
     </Sider>

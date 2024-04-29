@@ -15,8 +15,9 @@ export const setIpcMain = (mainWindow: BrowserWindow | null, loadingWindow: Brow
   });
 
   ipcMain.on("UnReadChange", (e, num) => {
-    app.setBadgeCount(num);
-    setTrayTitle(num);
+    // app.setBadgeCount(num);
+    // setTrayTitle(num);
+    mainWindow?.flashFrame(!mainWindow?.isFocused() && num > 0);
   });
 
   ipcMain.on("MiniSizeApp", (e) => {

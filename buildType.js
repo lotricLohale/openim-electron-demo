@@ -74,5 +74,5 @@ const replaceImg = () => {
 // 替换文本内容
 indexPaths.forEach((p) => run(p));
 // 替换图片
-// replaceImg();
+replaceImg();
 console.log("buildType run...");

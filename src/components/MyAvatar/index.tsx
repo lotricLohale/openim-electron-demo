@@ -54,7 +54,7 @@ const MyAvatar = (props: MyAvatarProps) => {
     return (
       <div style={{ padding: props.padding ?? "0px" }}>
         <div
-          style={{ width: "36px", height: "36px", backgroundColor: getColorFromName(props.nickname), borderRadius: "12px", textAlign: "center", lineHeight: "36px", color: "#fff" }}
+          style={{ width: "36px", height: "36px", backgroundColor: getColorFromName(props.nickname), borderRadius: "12px", textAlign: "center", lineHeight: "34px", color: "#fff" }}
         >
           {props.nickname.split("")[0].toUpperCase()}
         </div>

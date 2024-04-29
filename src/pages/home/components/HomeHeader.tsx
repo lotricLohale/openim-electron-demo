@@ -144,11 +144,12 @@ const ChatHeader: FC<ChatHeaderProps> = ({ curCve, typing }) => {
     lastCve.current = curCve;
     updateOnline(curCve!.userID);
     events.on(CHECK_USER_ONLINE, onlineUpdateHandler);
-    updateStatusTimeRef.current && clearTimeout(updateStatusTimeRef.current);
+    updateStatusTimeRef.current && clearInterval(updateStatusTimeRef.current);
     updateStatusTimeRef.current = setInterval(() => {
       updateOnline(curCve.userID);
     }, 5000)
     return () => {
+      updateStatusTimeRef.current && clearInterval(updateStatusTimeRef.current);
       events.off(CHECK_USER_ONLINE, onlineUpdateHandler);
     };
   }, [curCve?.userID]);

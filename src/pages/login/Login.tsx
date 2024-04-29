@@ -66,8 +66,16 @@ const TypeSwitch: FC<{ onChange?: (val: string) => void }> = (props) => {
     </div>
   );
 };
+export interface LoginProps {
+  initLogin?: {
+    userID: string;
+    token: string;
+    callBack: Function;
+  };
+}
 
-const Login = () => {
+const Login: FC<LoginProps> = (props) => {
+  const { initLogin } = props;
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -233,11 +241,8 @@ const Login = () => {
     }
   };
 
-  const imLogin = async (userID: string, token: string) => {
-    localStorage.setItem(`IMareaCode`, dataRef.current.phoneData.country.dialCode);
-    restStore();
-    initEmoji(userID);
-
+  const imLogin = async (userID: string, token: string, dialCode?: string) => {
+    localStorage.setItem(`IMareaCode`, dialCode ?? dataRef.current.phoneData.country.dialCode);
     let platformID = window.electron ? window.electron.platform : 5;
     const config: any = {
       userID,
@@ -248,11 +253,23 @@ const Login = () => {
     };
     im.login(config)
       .then((res) => {
+        restStore();
+        initEmoji(userID);
         getStore(userID);
         localStorage.setItem(`improfile-${userID}`, token);
         localStorage.setItem(`IMuserID`, userID);
         window.electron?.setStoreKey("IMUserID", userID);
         window.electron?.setStoreKey("IMProfile", token);
+        let accountList: any = localStorage.getItem("qieqie_localAccountList");
+        if (accountList) {
+          accountList = JSON.parse(accountList) || {};
+          accountList[userID] = {
+            dialCode: dataRef.current.phoneData.country.dialCode,
+            userID,
+            token,
+          };
+          localStorage.setItem("qieqie_localAccountList", JSON.stringify(accountList));
+        }
         navigate("/", { replace: true });
         window.electron.setLoginMain();
       })
@@ -290,6 +307,17 @@ const Login = () => {
   const toggle = (mtype: Itype) => {
     setType(mtype);
   };
+  React.useEffect(() => {
+    if (initLogin) {
+      return;
+    }
+    window.electron?.setLoginInit();
+    navigate("/login", { replace: true });
+    setTimeout(() => {
+      window.electron?.focusHomePage();
+    }, 100);
+  }, []);
+  if (initLogin) return null;
   const LoginForm = () => {
     const [form] = Form.useForm();
     const { loading, apiLoading } = useApiLoading();
@@ -1064,13 +1092,7 @@ const Login = () => {
       </div>
     );
   };
-  React.useEffect(() => {
-    window.electron?.setLoginInit();
-    navigate("/login", { replace: true });
-    setTimeout(() => {
-      window.electron?.focusHomePage();
-    }, 100);
-  }, []);
+
   return (
     <div className="login-main">
       <WindowControlBar />

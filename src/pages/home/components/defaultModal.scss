@@ -1,0 +1,109 @@
+.qieqie-account-manage{
+    padding: 14px 24px;
+    &-title{
+        color: #0e1013;
+        text-align: center;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 24px;
+        margin-bottom: 18px;
+    }
+    &-item{
+        height: 80px;
+        padding: 16px 0px;
+        width: 100%;
+        border-bottom: 1px solid #F5F6F7;
+        text-align: justify;
+        &-user{
+            vertical-align: middle;
+            display: inline-block;
+            width: calc(100% - 16px);
+            & > div{
+                display: inline-block;
+            }
+            &-info{
+                margin-left: 16px;
+                vertical-align: middle;
+                &-name{
+                    display: block;
+                    color: #0e1013;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 500;
+                }
+                &-status{
+                    color: #a5a8ac;
+                    display: block;
+                    font-size: 12px;
+                    font-style: normal;
+                    font-weight: 400;
+                }
+            }
+        }
+    }
+    &-info{
+        margin-top: 28px;
+        &-title{
+            color: #a5a8ac;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 16px
+        }
+        &-item{
+            height: 44px;
+            border-bottom: 1px solid #F5F6F7;
+            line-height: 44px;
+            display: flex;
+            justify-content: space-between;
+            &-title{
+                color: #0e1013;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 44px;
+            }
+            &-value{
+                color: #a5a8ac;
+                text-align: right;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 44px;
+                padding-right: 8px;
+                &::after{
+                    content: " ";
+                    display: inline-block;
+                    width: 8px;
+                    height: 8px;
+                    border-right: 1px solid #a5a8ac;
+                    border-bottom: 1px solid #a5a8ac;
+                    transform: rotate(-45deg);
+                    position: relative;
+                    top: -1px;
+                    right: -6px;
+                }
+            }
+        }
+    }
+    &-btns{
+        text-align: center;
+        margin-top: 70px;
+        & > button{
+            display: block;
+            margin: auto;
+            border: 0px;
+            width: 188px;
+            height: 32px;
+            background-color: #F3F4F5;
+            color: #0e1013;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 8px;
+            font-style: normal;
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+    }
+}
