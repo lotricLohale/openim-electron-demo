@@ -28,6 +28,17 @@
   padding: 0 24px;
   position: absolute;
   -webkit-app-region: drag;
+  &-onlyClose-true{
+    .control-bar-langue{
+      visibility: hidden;
+    }
+    .bar-btn-img-min,
+    .bar-btn-img-max,
+    .bar-button-maxmizeWind,
+    .bar-button-minimizeWin{
+      display: none !important;
+    }
+  }
   .control-bar-button{
     display: flex;
     align-items: center;

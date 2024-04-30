@@ -58,10 +58,10 @@ export const updateSelfInfo = (params: Partial<BusinessUserInfo>) => {
   });
 };
 
-export const getUserInfoByBusiness = (userID: string) => {
-  return request.post("/user/get_users_full_info", JSON.stringify({ userIDList: [userID], operationID: Date.now() + "", platform }), {
+export const getUserInfoByBusiness = (userID: string | Array<string>, token?: string) => {
+  return request.post("/user/get_users_full_info", JSON.stringify({ userIDList: typeof userID === "string" ? [userID] : userID, operationID: Date.now() + "", platform }), {
     headers: {
-      token: localStorage.getItem(`accountProfile-${store.getState().user.selfInfo.userID ?? userID}`) ?? "",
+      token: token ?? localStorage.getItem(`accountProfile-${store.getState().user.selfInfo.userID ?? userID}`) ?? "",
     },
   });
 };

@@ -92,7 +92,7 @@ export const initApp = async () => {
   loadingWindow?.show();
 };
 
-function checkPartition() {
+export function checkPartition() {
   let part = getStoreKey("PartitionRandom") || 0;
 
   part = part > 4 ? 1 : part + 1;

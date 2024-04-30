@@ -72,10 +72,12 @@ export interface LoginProps {
     token: string;
     callBack: Function;
   };
+  modal?: boolean;
 }
 
 const Login: FC<LoginProps> = (props) => {
-  const { initLogin } = props;
+  const { initLogin, modal } = props;
+
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -93,7 +95,9 @@ const Login: FC<LoginProps> = (props) => {
   const checkFucRef = React.useRef<any>();
   const reStartRef = React.useRef<Function>();
   const lastType = useLatest(type);
-
+  const loginType = React.useMemo(() => {
+    return location.href.split("?loginType=")[1];
+  }, []);
   const finish = async (values?: FormField | string | InfoField) => {
     const lType = typeof values === "string" ? values : lastType.current;
     switch (lType) {
@@ -159,8 +163,8 @@ const Login: FC<LoginProps> = (props) => {
         };
         register(options)
           .then((res: any) => {
-            localStorage.setItem(`IMaccount`, formData.no);
-            localStorage.setItem(`accountProfile-${res.data.userID}`, res.data.chatToken);
+            !loginType && localStorage.setItem(`IMaccount`, formData.no);
+            !loginType && localStorage.setItem(`accountProfile-${res.data.userID}`, res.data.chatToken);
             imLogin(res.data.userID, res.data.imToken);
           })
           .catch((err) => handleError(err));
@@ -185,8 +189,8 @@ const Login: FC<LoginProps> = (props) => {
         }
         const registerData: any = await register(registerParams);
         if (registerData.errCode !== 0) return;
-        localStorage.setItem(`IMaccount`, dataRef.current.phoneNumber);
-        localStorage.setItem(`accountProfile-${registerData.data.userID}`, registerData.data.chatToken);
+        !loginType && localStorage.setItem(`IMaccount`, dataRef.current.phoneNumber);
+        !loginType && localStorage.setItem(`accountProfile-${registerData.data.userID}`, registerData.data.chatToken);
         imLogin(registerData.data.userID, registerData.data.imToken);
         break;
       case "modify":
@@ -242,6 +246,20 @@ const Login: FC<LoginProps> = (props) => {
   };
 
   const imLogin = async (userID: string, token: string, dialCode?: string) => {
+    if (!!loginType) {
+      let accountList: any = localStorage.getItem("qieqie_localAccountList");
+      if (accountList) {
+        accountList = JSON.parse(accountList) || {};
+        accountList[userID] = {
+          dialCode: dataRef.current.phoneData.country.dialCode,
+          userID,
+          token,
+        };
+        localStorage.setItem("qieqie_localAccountList", JSON.stringify(accountList));
+      }
+      window.electron?.accountLoginClose();
+      return;
+    }
     localStorage.setItem(`IMareaCode`, dialCode ?? dataRef.current.phoneData.country.dialCode);
     let platformID = window.electron ? window.electron.platform : 5;
     const config: any = {
@@ -308,7 +326,7 @@ const Login: FC<LoginProps> = (props) => {
     setType(mtype);
   };
   React.useEffect(() => {
-    if (initLogin) {
+    if (initLogin || modal || loginType) {
       return;
     }
     window.electron?.setLoginInit();
@@ -316,6 +334,7 @@ const Login: FC<LoginProps> = (props) => {
     setTimeout(() => {
       window.electron?.focusHomePage();
     }, 100);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   if (initLogin) return null;
   const LoginForm = () => {
@@ -500,17 +519,19 @@ const Login: FC<LoginProps> = (props) => {
             <div className="login-box-main-form">
               <LoginForm />
             </div>
-            <Button
-              size="large"
-              className="login-box-download"
-              block
-              onClick={() => {
-                window.electron.openExternal("https://qieqieapp.com");
-              }}
-              icon={<img style={{ marginRight: "8px" }} src={appImg} alt="download" />}
-            >
-              {t("login.appDownloadTips")}
-            </Button>
+            {!loginType && (
+              <Button
+                size="large"
+                className="login-box-download"
+                block
+                onClick={() => {
+                  window.electron.openExternal("https://qieqieapp.com");
+                }}
+                icon={<img style={{ marginRight: "8px" }} src={appImg} alt="download" />}
+              >
+                {t("login.appDownloadTips")}
+              </Button>
+            )}
           </div>
         </div>
       </>
@@ -598,10 +619,10 @@ const Login: FC<LoginProps> = (props) => {
             verificationCode: dataRef.current.verificationCode,
             password: md5(password),
           };
-          localStorage.setItem(`IMaccount`, dataRef.current.phoneNumber.split(pwdAreaCode)[1]);
+          !loginType && localStorage.setItem(`IMaccount`, dataRef.current.phoneNumber.split(pwdAreaCode)[1]);
           const resData: ResponseData = await login(params);
           imLogin(resData.data.userID, resData.data.imToken);
-          localStorage.setItem(`accountProfile-${resData.data.userID}`, resData.data.chatToken);
+          !loginType && localStorage.setItem(`accountProfile-${resData.data.userID}`, resData.data.chatToken);
           break;
       }
     };
@@ -1095,7 +1116,7 @@ const Login: FC<LoginProps> = (props) => {
 
   return (
     <div className="login-main">
-      <WindowControlBar />
+      <WindowControlBar onlyClose={Boolean(loginType)} />
       <Captcha
         checkFuc={checkFucRef}
         getUrl={`${REGISTER_URL}/account/get_block_puzzle`}

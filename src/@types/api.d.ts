@@ -37,4 +37,6 @@ export type API = {
   removeStoreKey: (key: string) => string;
   setStoreKey: (key: string, value: string) => void;
   getScreenSource: () => Promise<Electron.DesktopCapturerSource[]>;
+  accountLogin: () => void;
+  accountLoginClose: () => void;
 };

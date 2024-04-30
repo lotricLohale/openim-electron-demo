@@ -762,7 +762,7 @@ export const move2end = (ref: React.RefObject<HTMLDivElement>) => {
 
 export const downloadFileUtil = (filePath: string, filename: string, msgID: string, notCve = false) => {
   if (window.electron) {
-    const url = `${filePath}?msgid=${msgID}&filename=${filename}${notCve ? "&notCve" : ""}`
+    const url = `${filePath}?msgid=${msgID}&filename=${filename}${notCve ? "&notCve" : ""}`;
     // const url = filePath + "?msgid=" + msgID + (notCve ? "&notCve" : "");
     window.electron.download(url);
     return;
@@ -774,8 +774,6 @@ export const downloadFileUtil = (filePath: string, filename: string, msgID: stri
   document.body.appendChild(linkNode);
   linkNode.click();
   document.body.removeChild(linkNode);
-  console.log(123);
-  
 };
 
 // export const downloadFileUtil = (filePath: string, filename: string, msgID: string, notCve = false) => {
@@ -969,7 +967,7 @@ export const diffMemo = (prev: any, next: any, diffKey: string[]) => {
 };
 
 export const genAvatar = (str: string, size: number) => {
-  str = !str ? "未知" : str.split('')[0];
+  str = !str ? "未知" : str.split("")[0];
   let colors = ["#0072E3"];
   let cvs = document.createElement("canvas");
   cvs.setAttribute("width", size as unknown as string);
@@ -1062,3 +1060,9 @@ export const switchLoginError = (errCode: number) => {
       return undefined;
   }
 };
+
+export function getUrlParams() {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  return Object.fromEntries(urlParams.entries());
+}

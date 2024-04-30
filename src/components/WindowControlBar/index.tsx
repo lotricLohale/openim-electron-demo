@@ -4,7 +4,7 @@ import win_min from "@/assets/images/topSearchBar/win_min.png";
 import closeImg from "@/assets/images/topSearchBar/close.png";
 import langueIcon from "@/assets/images/topSearchBar/langue.png";
 import { Select } from "antd";
-import React from "react";
+import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./index.scss";
@@ -32,11 +32,16 @@ const LangueSelect = () => {
   );
 };
 
-const WindowControlBar = () => {
+interface WindowControlBarProps {
+  onlyClose?: boolean;
+}
+
+const WindowControlBar: FC<WindowControlBarProps> = (props) => {
+  const { onlyClose } = props;
   const navigate = useNavigate();
   console.log(window.electron.platform !== 3);
   return (
-    <div className="window-control-bar">
+    <div className={`window-control-bar window-control-bar-onlyClose-${onlyClose}`}>
       {window.electron.platform !== 3 && (
         <div className="control-bar-button">
           <div className="bar-button-minimizeWindow" onClick={() => window.electron?.miniSizeApp()}>
@@ -83,7 +88,7 @@ const WindowControlBar = () => {
           <div className="bar-button-maxmizeWind" onClick={() => window.electron?.maxSizeApp()}>
             <span></span>
           </div>
-          <div className="bar-button-closeWind" onClick={() => window.electron?.closeApp()}>
+          <div className="bar-button-closeWind" onClick={() => (onlyClose ? window.electron?.accountLoginClose() : window.electron?.closeApp())}>
             <img src={closeImg} alt="close" />
           </div>
         </div>

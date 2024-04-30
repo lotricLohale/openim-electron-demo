@@ -167,6 +167,13 @@ const getScreenSource = () => {
   return desktopCapturer.getSources({ types: ["screen"] });
 };
 
+const accountLogin = () => {
+  console.log("accountLogin");
+  ipcRenderer.send("accountLogin");
+};
+const accountLoginClose = () => {
+  ipcRenderer.send("accountLogin-close");
+};
 export const api: API = {
   platform: getPlatform(),
   isMac,
@@ -205,6 +212,8 @@ export const api: API = {
   setStoreKey,
   removeStoreKey,
   getScreenSource,
+  accountLogin,
+  accountLoginClose,
 };
 
 contextBridge.exposeInMainWorld(apiKey, api);

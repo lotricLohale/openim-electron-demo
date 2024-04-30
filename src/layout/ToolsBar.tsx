@@ -223,7 +223,6 @@ const ToolsBar: FC<ToolsBarProps> = ({ userInfo }) => {
       </Tooltip>
     </div>
   );
-
   return (
     <Sider width="60" theme="light" className={styles.tool_bar}>
       <div className={styles.tools}>
