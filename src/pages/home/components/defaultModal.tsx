@@ -6,9 +6,10 @@ import MyAvatar from "../../../components/MyAvatar";
 
 import "./defaultModal.scss";
 import { FullUserItem } from "../../../utils/open_im_sdk/types";
-import { events, im } from "../../../utils";
+import { im } from "../../../utils";
 import Login from "../../login/Login";
 import { UPDATE_ACCOUNT } from "../../../constants/events";
+import { CheckboxValueType } from "antd/lib/checkbox/Group";
 
 export interface DefaultModalProps extends ModalProps {
   render?: any;
@@ -20,8 +21,8 @@ const DefaultModal: React.FC<DefaultModalProps> = (props) => {
   const [open, setOpen] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [bounds, setBounds] = useState({ left: 0, top: 0, bottom: 0, right: 0 });
-  const [userList, setUserList] = useState([{}]);
-  const [showLogin, setShowLogin] = useState(false);
+  const [userList, setUserList] = useState<any[]>([{}]);
+  const [loginId, setLoginId] = useState("");
   const draggleRef = useRef<HTMLDivElement>(null);
   const userInfoConfig = React.useMemo(
     () => [
@@ -67,42 +68,47 @@ const DefaultModal: React.FC<DefaultModalProps> = (props) => {
       bottom: clientHeight - (targetRect.bottom - uiData.y),
     });
   };
-  const switchAccount = () => {};
+  const switchAccount = (checkedValue: CheckboxValueType[]) => {
+    if (checkedValue.length === 0) return;
+    const loginId = checkedValue.filter((key) => key !== userInfo.userID)[0];
+    setLoginId(loginId as string);
+    console.log(checkedValue);
+  };
+  const updateUserList = async () => {
+    let accountList: any = localStorage.getItem("qieqie_localAccountList");
+    if (accountList) {
+      accountList = JSON.parse(accountList) || {};
+    } else {
+      accountList = {};
+    }
+    if (!accountList[userInfo.userID]) {
+      accountList[userInfo.userID] = { dialCode: localStorage.getItem(`IMareaCode`), userID: userInfo.userID, token: localStorage.getItem(`improfile-${userInfo.userID}`) };
+    }
+    const ids: Array<string> = [];
+    const idsData: any[] = [];
+    for (const key in accountList) {
+      ids.push(key);
+      idsData.push(accountList[key]);
+    }
+    const res = await im.getUsersInfo(ids);
+    try {
+      const uArr = JSON.parse(res.data);
+      uArr.forEach((item: any, idx: number) => {
+        idsData[idx].info = item?.publicInfo;
+      });
+    } catch (error) {}
+    console.log("accountList", res);
+    setUserList(idsData);
+  };
   const updateAccount = async () => {
-    debugger;
-    console.log("updateAccount", localStorage.getItem("qieqie_localAccountList"));
+    updateUserList();
   };
   useEffect(() => {
     setOpen(!!render);
   }, [render]);
   useEffect(() => {
     if (!Boolean(render)) return;
-    (async () => {
-      let accountList: any = localStorage.getItem("qieqie_localAccountList");
-      if (accountList) {
-        accountList = JSON.parse(accountList) || {};
-      } else {
-        accountList = {};
-      }
-      if (!accountList[userInfo.userID]) {
-        accountList[userInfo.userID] = { dialCode: localStorage.getItem(`IMareaCode`), userID: userInfo.userID, token: localStorage.getItem(`improfile-${userInfo.userID}`) };
-      }
-      const ids: Array<string> = [];
-      const idsData: any[] = [];
-      for (const key in accountList) {
-        ids.push(key);
-        idsData.push(accountList[key]);
-      }
-      const res = await im.getUsersInfo(ids);
-      try {
-        const uArr = JSON.parse(res.data);
-        uArr.forEach((item: any, idx: number) => {
-          idsData[idx].info = item?.publicInfo;
-        });
-      } catch (error) {}
-      console.log("accountList", res);
-      setUserList(idsData);
-    })();
+    updateUserList();
   }, [render, userInfo.userID]);
   useEffect(() => {
     window.electron.addIpcRendererListener(UPDATE_ACCOUNT, updateAccount, UPDATE_ACCOUNT);
@@ -133,7 +139,7 @@ const DefaultModal: React.FC<DefaultModalProps> = (props) => {
       <div className="qieqie-account-manage">
         <div className="qieqie-account-manage-title">账号</div>
         <div className="qieqie-account-manage-check">
-          <Checkbox.Group style={{ width: "100%" }} onChange={switchAccount}>
+          <Checkbox.Group style={{ width: "100%" }} value={[userInfo.userID]} onChange={switchAccount}>
             {userList.map((user: any) => {
               return (
                 <Row>
@@ -145,7 +151,7 @@ const DefaultModal: React.FC<DefaultModalProps> = (props) => {
                         <span className="qieqie-account-manage-item-user-info-status">{user.info?.userID === userInfo.userID ? "登录中" : ""}</span>
                       </div>
                     </div>
-                    <Checkbox value="E"></Checkbox>
+                    <Checkbox value={user.info?.userID}></Checkbox>
                   </div>
                 </Row>
               );
@@ -173,6 +179,16 @@ const DefaultModal: React.FC<DefaultModalProps> = (props) => {
           </Button>
           <Button>退出登录</Button>
         </div>
+        {loginId && (
+          <Login
+            initLogin={{
+              ...userList.filter((user) => user.userID === loginId)[0],
+              callBack: () => {
+                setLoginId("");
+              },
+            }}
+          />
+        )}
       </div>
     </Modal>
   );

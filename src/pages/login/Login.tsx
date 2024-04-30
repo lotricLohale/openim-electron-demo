@@ -70,6 +70,7 @@ export interface LoginProps {
   initLogin?: {
     userID: string;
     token: string;
+    dialCode: string;
     callBack: Function;
   };
   modal?: boolean;
@@ -249,14 +250,16 @@ const Login: FC<LoginProps> = (props) => {
     if (!!loginType) {
       let accountList: any = localStorage.getItem("qieqie_localAccountList");
       if (accountList) {
-        accountList = JSON.parse(accountList) || {};
-        accountList[userID] = {
-          dialCode: dataRef.current.phoneData.country.dialCode,
-          userID,
-          token,
-        };
-        localStorage.setItem("qieqie_localAccountList", JSON.stringify(accountList));
+        accountList = JSON.parse(accountList);
+      } else {
+        accountList = {};
       }
+      accountList[userID] = {
+        dialCode: dataRef.current.phoneData.country.dialCode,
+        userID,
+        token,
+      };
+      localStorage.setItem("qieqie_localAccountList", JSON.stringify(accountList));
       window.electron?.accountLoginClose();
       return;
     }
@@ -327,6 +330,10 @@ const Login: FC<LoginProps> = (props) => {
   };
   React.useEffect(() => {
     if (initLogin || modal || loginType) {
+      if (initLogin) {
+        initLogin.callBack();
+        imLogin(initLogin.userID, initLogin.token, initLogin.dialCode);
+      }
       return;
     }
     window.electron?.setLoginInit();
@@ -335,7 +342,7 @@ const Login: FC<LoginProps> = (props) => {
       window.electron?.focusHomePage();
     }, 100);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [initLogin]);
   if (initLogin) return null;
   const LoginForm = () => {
     const [form] = Form.useForm();
